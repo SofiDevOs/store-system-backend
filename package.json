@@ -2,13 +2,29 @@
   "name": "store-system-backend",
   "version": "1.0.0",
   "description": "api for store system",
-  "main": "index.js",
-  "type": "module",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "watch": "tsc -w"
   },
-  "keywords": ["express", "nodejs"],
+  "keywords": [
+    "express",
+    "nodejs"
+  ],
   "author": "",
+  "engines": {
+    "node": ">=24.13.0"
+  },
   "license": "MIT",
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.28.2",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "25.2.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
