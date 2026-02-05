@@ -1,4 +1,4 @@
-import { DB_DATABASE, DB_USER, DB_HOST, DB_PASSWORD, DB_PORT } from "./envs";// -> Variables de entorno que tienes en tu archivo .env para tu BD
+import { DB_DATABASE, DB_USER, DB_HOST, DB_PASSWORD, DB_PORT } from "./envs.config";// -> Variables de entorno que tienes en tu archivo .env para tu BD
 //Aqui deberia ir la configuracion de tu ORM a tu BD.
 //
 // -->

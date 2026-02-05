@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 import { validateProperties } from '../middlewares/validate-properties';
 import { AuthService } from '../service/auth/auth.service';
 import { AuthController } from '../controller/auth/Auth.controller';
+
 const router = Router();
 //Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
 const authService = new AuthService();

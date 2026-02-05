@@ -1,9 +1,9 @@
 import { IAuthService, ILoginPost } from './IAuth.interface';
+import { JWT } from '../../helpers/jwt';
 //Aqui va la regla de negocio, las consultas en tus bases de datos y tus querys.
 //Trata de que cada accion distinta se implemente en metodos separados
 export class AuthService implements IAuthService{
     constructor(){}
-
 
     //->Aqui aun faltaria generar la interface de respuesta Promise<any> para que no sea any. Ya que se necesitaria validar 
     // que datos se van a devolver del usuario si es que el login se realiza correctamante.                                                     
