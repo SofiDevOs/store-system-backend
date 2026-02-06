@@ -6,35 +6,35 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/src/app.js"
+    "build": "tsc",
+    "start": "node dist/src/app.js"
   },
   "keywords": [
     "express",
     "nodejs"
   ],
-  "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.3.0",
-    "@prisma/client": "^7.3.0",
-    "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.6.2",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "express-validator": "^7.3.1",
-    "jsonwebtoken": "^9.0.3"
+    "@prisma/adapter-better-sqlite3": "7.3.0",
+    "@prisma/client": "7.3.0",
+    "bcryptjs": "3.0.3",
+    "better-sqlite3": "12.6.2",
+    "cors": "2.8.6",
+    "dotenv": "17.2.4",
+    "express": "5.2.1",
+    "express-validator": "7.3.1",
+    "jsonwebtoken": "9.0.3"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "i": "^0.3.7",
-    "npm": "^11.9.0",
-    "prisma": "^7.3.0",
-    "rimraf": "^6.1.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "@types/express": "5.0.6",
+    "@types/jsonwebtoken": "9.0.10",
+    "i": "0.3.7",
+    "nodemon": "3.1.11",
+    "npm": "11.9.0",
+    "prisma": "7.3.0",
+    "rimraf": "6.1.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
   }
 }

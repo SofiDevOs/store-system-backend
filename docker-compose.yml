@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    container_name: backend
+    image: store-system-backend:1.0.0
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    command: pnpm run start
