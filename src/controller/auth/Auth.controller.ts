@@ -16,7 +16,15 @@ export class AuthController{
       });
     } catch (error: unknown) {
       //manejas tus errores personalizado
-      if (error instanceof Error && error.name == "Error 401") {
+      if (error instanceof Error && error.name == "Nor Found") {
+        res.status(404).json({
+          status: 404,
+          name: error.name,
+          msg: error.message,
+        });
+      }
+
+       if (error instanceof Error && error.name == "Unauthorized") {
         res.status(401).json({
           status: 401,
           name: error.name,
@@ -30,4 +38,8 @@ export class AuthController{
       });
     }
   };
+
+  public registerPost= async( req:Request, res:Response)=>{
+
+  }
 }

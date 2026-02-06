@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/app.js"
+    "start": "npm run build && node dist/src/app.js"
   },
   "keywords": [
     "express",
