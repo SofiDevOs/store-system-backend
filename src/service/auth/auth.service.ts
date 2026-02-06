@@ -21,7 +21,7 @@ export class AuthService implements IAuthService {
         email,
       },
     });
-    console.log(password);
+
     if (!user) throw instanceNotFoundError("Usuario no encontrado");
 
     //tambien aqui puedes generar tur errores personalizaados si el usuario no existe, esta dado debaja, etc/
