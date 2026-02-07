@@ -1,10 +1,13 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: store-system-backend
+  backend:
+    build: .
+    container_name: backend
     image: store-system-backend:1.0.0
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 1G
     env_file:
       - .env
     ports:
