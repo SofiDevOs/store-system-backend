@@ -1,10 +1,12 @@
+#!/bin/bash
+
 function dev {
-    docker-compose -f docker-compose.dev.yml down
-    docker-compose -f docker-compose.dev.yml up
+    sudo docker compose -f docker-compose.dev.yml down -v
+    sudo docker compose -f docker-compose.dev.yml up --build
 }
 
 function prod {
-    docker-compose up --build
+    sudo docker compose up --build
 }
 
 read -p "¿Deseas iniciar en modo dev o prod? (dev/prod): " choice

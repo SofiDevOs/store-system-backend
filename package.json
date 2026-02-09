@@ -39,8 +39,8 @@
         "@types/express": "5.0.6",
         "@types/jsonwebtoken": "9.0.10",
         "nodemon": "3.1.11",
+        "typescript": "5.9.3",
         "ts-node": "10.9.2",
-        "tsx": "^4.21.0",
-        "typescript": "5.9.3"
+        "tsx": "^4.21.0"
     }
 }

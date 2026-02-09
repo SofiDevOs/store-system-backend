@@ -1,8 +1,10 @@
 services:
     app:
-        build: .
+        build:
+            context: .
+            target: development
         container_name: backend
-        image: store-system-backend:1.0.0
+        image: store-system-backend:dev
         deploy:
             resources:
                 limits:
@@ -13,10 +15,10 @@ services:
         ports:
             - "3000:3000"
         environment:
-            - NODE_ENV=production
-            - DATABASE_URL=file:/app/data/prod.db
+            - NODE_ENV=development
+            - DATABASE_URL=file:/app/data/dev.db
             - CHOKIDAR_USEPOLLING=true
-            - WATHCHPACKER_POLLING=true
+            - WATCHPACKER_POLLING=true
         volumes:
             - ./:/app
             - ./data:/app/data

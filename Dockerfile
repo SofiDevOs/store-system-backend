@@ -15,6 +15,24 @@ RUN pnpm run db:generate
 
 RUN pnpm build
 
+# estapa de desarrollo
+FROM node:22-alpine AS development
+
+WORKDIR /app
+
+RUN corepack enable
+
+ENV NODE_ENV=development
+
+COPY package.json .
+
+RUN pnpm install
+
+COPY . .
+
+EXPOSE 3000
+
+
 # estapa de producción
 FROM node:22-alpine AS production
 
