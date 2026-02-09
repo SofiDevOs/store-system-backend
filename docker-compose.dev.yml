@@ -1,0 +1,30 @@
+services:
+    app:
+        build: .
+        container_name: backend
+        image: store-system-backend:1.0.0
+        deploy:
+            resources:
+                limits:
+                    cpus: 0.5
+                    memory: 1G
+        env_file:
+            - .env
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=production
+            - DATABASE_URL=file:/app/data/prod.db
+            - CHOKIDAR_USEPOLLING=true
+            - WATHCHPACKER_POLLING=true
+        volumes:
+            - ./:/app
+            - ./data:/app/data
+            - node_modules:/app/node_modules
+            - pnpm_store:/app/pnpm_store
+        restart: unless-stopped
+        command: sh -c "pnpm run db:generate && pnpm run dev"
+
+volumes:
+    node_modules:
+    pnpm_store:
