@@ -34,21 +34,25 @@ API REST para sistema integral de gestión de tiendas, recursos humanos, inventa
 ## 🛠 Tecnologías
 
 ### Core
+
 - **Node.js 22** - Runtime de JavaScript
 - **TypeScript 5.9** - Tipado estático
 - **Express 5.2** - Framework web
 - **Prisma 7.3** - ORM y query builder
 
 ### Base de Datos
+
 - **SQLite** con better-sqlite3
 - **Prisma Client** con soporte para adaptador SQLite
 
 ### Seguridad
+
 - **bcrypt** - Hash de contraseñas
 - **jsonwebtoken** - Tokens JWT para autenticación
 - **cors** - Control de acceso cross-origin
 
 ### Desarrollo
+
 - **nodemon** - Hot reload en desarrollo
 - **ts-node** - Ejecución de TypeScript
 - **tsx** - Ejecución rápida de TypeScript
@@ -163,6 +167,7 @@ El servidor estará disponible en `http://localhost:8080`
 ### Cliente Prisma Extendido
 
 El proyecto utiliza un cliente Prisma extendido que automáticamente:
+
 - ✅ Hashea contraseñas en operaciones `create`, `update` y `upsert`
 - ✅ Usa bcrypt con salt rounds de 10
 - ✅ Mantiene el patrón singleton en desarrollo
@@ -196,9 +201,11 @@ pnpm clean            # Limpia carpeta dist/
 El proyecto utiliza múltiples archivos de schema Prisma para mejor organización:
 
 #### 🔐 **auth.prisma** - Autenticación
+
 - `User` - Usuarios del sistema con roles y verificación
 
 #### 👥 **hr.prisma** - Recursos Humanos
+
 - `Employee` - Información de empleados
 - `Schedule` - Horarios de trabajo
 - `TimeOff` - Días libres y vacaciones
@@ -209,6 +216,7 @@ El proyecto utiliza múltiples archivos de schema Prisma para mejor organizació
 - `ShiftSwap` - Intercambios de turnos
 
 #### 📦 **inventory.prisma** - Inventario
+
 - `Warehouse` - Almacenes
 - `Product` - Productos
 - `StockLog` - Movimientos de inventario
@@ -216,6 +224,7 @@ El proyecto utiliza múltiples archivos de schema Prisma para mejor organizació
 - `TransferItem` - Ítems de transferencia
 
 #### 💰 **sales.prisma** - Ventas
+
 - `Sale` - Ventas realizadas
 - `SaleItem` - Productos vendidos
 - `Payment` - Pagos
@@ -278,6 +287,7 @@ Los datos se persisten en `./data/prod.db` en el host.
 ## 🎯 Funcionalidades
 
 ### Administradores
+
 - ✅ Registro y gestión de usuarios
 - ✅ Registro y gestión de empleados
 - ✅ Modificación de permisos
@@ -288,6 +298,7 @@ Los datos se persisten en `./data/prod.db` en el host.
 - ✅ Aprobación de intercambios de turnos
 
 ### Empleados (Usuarios)
+
 - ✅ Acceso a perfil personal
 - ✅ Consulta de días libres disponibles
 - ✅ Consulta de horas extra
@@ -299,6 +310,7 @@ Los datos se persisten en `./data/prod.db` en el host.
 ## 🔗 API Endpoints
 
 ### Autenticación
+
 ```
 POST   /api/auth/register     # Registro de usuario
 POST   /api/auth/login        # Inicio de sesión
@@ -307,6 +319,7 @@ POST   /api/auth/refresh      # Renovar token
 ```
 
 ### Usuarios
+
 ```
 GET    /api/users            # Listar usuarios (Admin)
 GET    /api/users/:id        # Obtener usuario
@@ -315,6 +328,7 @@ DELETE /api/users/:id        # Eliminar usuario (Admin)
 ```
 
 ### Empleados
+
 ```
 GET    /api/employees        # Listar empleados
 POST   /api/employees        # Crear empleado (Admin)
@@ -349,9 +363,9 @@ El proyecto usa `ts-node` con nodemon para hot reload:
 ```json
 // nodemon.json
 {
-  "watch": ["src", "prisma"],
-  "ext": "ts,prisma",
-  "exec": "ts-node src/app.ts"
+    "watch": ["src", "prisma"],
+    "ext": "ts,prisma",
+    "exec": "ts-node src/app.ts"
 }
 ```
 
