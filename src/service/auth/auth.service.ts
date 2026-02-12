@@ -16,7 +16,9 @@ export class AuthService implements IAuthService {
 
     //->Aqui aun faltaria generar la interface de respuesta Promise<any> para que no sea any. Ya que se necesitaria validar
     // que datos se van a devolver del usuario si es que el login se realiza correctamante.
-    public async validateInfoUser(data: ILoginPost): Promise<Result<string, Error>> {
+    public async validateInfoUser(
+        data: ILoginPost,
+    ): Promise<Result<string, Error>> {
         const { email, password } = data;
         console.log(email);
         console.log(password);
@@ -27,6 +29,9 @@ export class AuthService implements IAuthService {
             },
         });
         console.log(user);
+        // Se agrego el patron Result para manejar los errores de una manera mas limpia y evitar el uso de throw new Error() en el codigo.
+        // El servicio devuelve un resultado exitoso o un error envuelto en un objeto
+        // Asi se pueden manejar los errores de negocio de una manera mas consistente en toda la aplicacion, y se evita el uso de excepciones para controlar el flujo del programa.
         if (!user) return Result.fail<string, Error>(new NotFoundError("user not found"));
 
         //tambien aqui puedes generar tur errores personalizaados si el usuario no existe, esta dado debaja, etc/
