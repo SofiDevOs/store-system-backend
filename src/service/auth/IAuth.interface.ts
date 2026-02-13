@@ -1,3 +1,5 @@
+import { Result } from "../../shared/core/Result";
+
 interface ILoginPost {
     email: string;
     password: string;
@@ -32,7 +34,7 @@ interface IEmployeeInfo {
 }
 
 interface IAuthService {
-    validateInfoUser(data: ILoginPost): Promise<void>;
+    validateInfoUser(data: ILoginPost): Promise<Result<string, Error>>;
     createNewEmployee(data: IEmployeeInfo): Promise<void>;
 }
 

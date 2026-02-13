@@ -8,22 +8,32 @@ export class AuthController {
     constructor(private readonly authService: IAuthService) {}
 
     public loginPost = async (req: Request, res: Response) => {
-        try {
-            const data = req.body;
-            const resp = await this.authService.validateInfoUser(data);
-            res.status(200).json({
-                msg: resp,
-            });
-        } catch (error: unknown) {
-            //manejas tus errores personalizado
-            if (error instanceof HttpError) {
-                res.status(error.httpCode).json({
-                    status: error.httpCode,
-                    name: error.name,
-                    msg: error.message,
+       
+        const data = req.body;
+        const result = await this.authService.validateInfoUser(data);
+
+        result.fold(
+            (resp) => {
+                res.status(200).json({
+                    msg: resp,
                 });
-            }
-        }
+            },
+            (error) => {
+                if (error instanceof HttpError) {
+                    res.status(error.httpCode).json({
+                        status: error.httpCode,
+                        name: error.name,
+                        msg: error.message,
+                    });
+                } else {
+                    res.status(500).json({
+                        status: 500,
+                        name: "InternalServerError",
+                        msg: "An unexpected error occurred",
+                    });
+                }
+            },
+        );
     };
 
     public registerPost = async (req: Request, res: Response) => {};
