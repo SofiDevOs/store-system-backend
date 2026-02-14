@@ -22,6 +22,10 @@ export class Result<T, E> {
     }
 
     public getData(): T{
+        //  Se que en alguna parte puse que no deberiamos de tirar errores (throws) a cada rato
+        //  pero en este caso es necesario para evitar que se intente acceder a los datos de un resultado fallido
+        //  como tal es un error de programacion no un error de negocio
+        //  lo cual indicaria un error de logica en el codigo que esta usando el Result.
         if (!this.isSuccess || this.data === undefined) {
             throw new Error("Cannot get data from a failed Result");
         }
