@@ -35,27 +35,18 @@ importers:
       express:
         specifier: 5.2.1
         version: 5.2.1
+      express-async-errors:
+        specifier: ^3.1.1
+        version: 3.1.1(express@5.2.1)
       express-validator:
         specifier: 7.3.1
         version: 7.3.1
       jsonwebtoken:
         specifier: 9.0.3
         version: 9.0.3
-      nodemon:
-        specifier: 3.1.11
-        version: 3.1.11
       prisma:
         specifier: 7.3.0
         version: 7.3.0(@types/react@19.2.11)(better-sqlite3@12.6.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
-      ts-node:
-        specifier: 10.9.2
-        version: 10.9.2(@types/node@25.2.1)(typescript@5.9.3)
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
     devDependencies:
       '@types/bcrypt':
         specifier: ^6.0.0
@@ -69,6 +60,18 @@ importers:
       '@types/jsonwebtoken':
         specifier: 9.0.10
         version: 9.0.10
+      nodemon:
+        specifier: 3.1.11
+        version: 3.1.11
+      ts-node:
+        specifier: 10.9.2
+        version: 10.9.2(@types/node@25.2.1)(typescript@5.9.3)
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
 
 packages:
 
@@ -651,6 +654,11 @@ packages:
   expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
     engines: {node: '>=6'}
+
+  express-async-errors@3.1.1:
+    resolution: {integrity: sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==}
+    peerDependencies:
+      express: ^4.16.2
 
   express-validator@7.3.1:
     resolution: {integrity: sha512-IGenaSf+DnWc69lKuqlRE9/i/2t5/16VpH5bXoqdxWz1aCpRvEdrBuu1y95i/iL5QP8ZYVATiwLFhwk3EDl5vg==}
@@ -1821,6 +1829,10 @@ snapshots:
   etag@1.8.1: {}
 
   expand-template@2.0.3: {}
+
+  express-async-errors@3.1.1(express@5.2.1):
+    dependencies:
+      express: 5.2.1
 
   express-validator@7.3.1:
     dependencies:
