@@ -18,6 +18,9 @@ import { Result } from "../../shared/core/Result";
  * instead of throwing exceptions, enabling cleaner and more predictable
  * error handling across the application.
  *
+ * @see {@link https://www.prismaio.com/docs/concepts/components/prisma-client/transactions Prisma Transactions}
+ * @see {@link https://fsharpforfunandprofit.com/rop/ Railway Oriented Programming}
+ *
  * @example
  * ```ts
  * const authService = new AuthService();
@@ -69,6 +72,9 @@ export class AuthService implements IAuthService {
      *   - `Result.ok` with `"Usuario validado correctamente"` on success.
      *   - `Result.fail` with a {@link NotFoundError} if the user does not exist.
      *   - `Result.fail` with an {@link UnauthorizedError} if the account is deactivated.
+     *
+     * @see {@link https://www.prismaio.com/docs/concepts/components/prisma-client/crud#read Prisma findUnique}
+     * @see {@link https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html OWASP Authentication Guidelines}
      *
      * @example
      * ```ts
@@ -128,6 +134,11 @@ export class AuthService implements IAuthService {
      *   - `Result.ok` with `void` on successful creation.
      *   - `Result.fail` with a {@link NotFoundError} if the admin user does not exist.
      *   - `Result.fail` with an {@link UnauthorizedError} if the requesting user is not an admin.
+     *
+     * @see {@link https://www.prismaio.com/docs/concepts/components/prisma-client/transactions#interactive-transactions Prisma Interactive Transactions}
+     * @see {@link https://en.wikipedia.org/wiki/ACID Database ACID Properties}
+     * @see {@link https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html OWASP Authorization Guidelines}
+     * @see {@link https://www.prismaio.com/docs/concepts/database-connectors/postgresql#database-connection-url Database Connection}
      *
      * @example
      * ```ts
