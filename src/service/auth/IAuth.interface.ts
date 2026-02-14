@@ -35,7 +35,7 @@ interface IEmployeeInfo {
 
 interface IAuthService {
     validateInfoUser(data: ILoginPost): Promise<Result<string, Error>>;
-    createNewEmployee(data: IEmployeeInfo): Promise<void>;
+    createNewEmployee(data: IEmployeeInfo, requestingAdminEmail: string): Promise<Result<void, Error>>;
 }
 
 export { ILoginPost, IAuthService, IUser, IEmployeeInfo };

@@ -9,11 +9,14 @@ export class AuthController {
     public loginPost = async (req: Request, res: Response) => {
         const data = req.body;
         const result = await this.authService.validateInfoUser(data);
-
+        result.getData()
         // result es un Either, por lo que usamos fold para manejar ambos casos: éxito y error
         // si hay un error lo propagamos para que el errorHandler lo maneje, si no hay error devolvemos la respuesta exitosa
         result.fold(
-            (resp) => res.json({ msg: resp }),
+            (resp) => res.json({
+                 msg: resp,
+                csrfToken: res.locals.csrfToken,
+             }),
             (error) => {
                 throw error;
             },
