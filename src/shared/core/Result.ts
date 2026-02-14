@@ -21,6 +21,21 @@ export class Result<T, E> {
         return this.isSuccess;
     }
 
+    public getData(): T{
+        if (!this.isSuccess || this.data === undefined) {
+            throw new Error("Cannot get data from a failed Result");
+        }
+        return this.data;
+    }
+
+    public getError(): E {
+        if (this.isSuccess || this.error === undefined) {
+            throw new Error("Cannot get error from a successful Result");
+        }
+        return this.error;
+    }
+
+
     public fold<U>(onSuccess: (data: T) => U, onFailure: (error: E) => U): U {
         if (this.isSuccess && this.data !== undefined) {
             return onSuccess(this.data);
