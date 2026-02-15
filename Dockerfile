@@ -1,5 +1,5 @@
 # estapa de compilado
-FROM node:22-alpine AS build
+FROM node:22 AS build
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN pnpm run db:generate
 RUN pnpm build
 
 # estapa de desarrollo
-FROM node:22-alpine AS development
+FROM node:22 AS development
 
 WORKDIR /app
 
@@ -34,7 +34,7 @@ EXPOSE 3000
 
 
 # estapa de producción
-FROM node:22-alpine AS production
+FROM node:22 AS production
 
 WORKDIR /app
 

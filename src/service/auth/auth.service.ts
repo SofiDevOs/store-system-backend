@@ -7,6 +7,7 @@ import {
 } from "./IAuth.interface";
 import { NotFoundError, UnauthorizedError } from "../../helpers/errors/error";
 import { Result } from "../../shared/core/Result";
+import bcrypt from "bcryptjs";
 
 /**
  * Service responsible for handling authentication and user management logic.
@@ -113,6 +114,10 @@ export class AuthService implements IAuthService {
         if (!user) return Result.fail<string, Error>(new NotFoundError("user not found"));
 
         if (!user.isActive) return Result.fail<string, Error>(new UnauthorizedError("Usuario dado de baja"));
+
+        // Verify password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return Result.fail<string, Error>(new UnauthorizedError("Credenciales inválidas"));
 
         return Result.ok<string, Error>("Usuario validado correctamente");
     }
