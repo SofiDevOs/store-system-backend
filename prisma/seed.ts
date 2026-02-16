@@ -1,6 +1,5 @@
-import { join } from "path";
-import { config } from "dotenv";
-import { prisma } from "./src/index";
+import bcrypt from "bcryptjs";
+import { prisma } from "../src/config/prisma";
 
 async function main() {
     if (process.env.NODE_ENV === "production") {
@@ -17,6 +16,8 @@ async function main() {
 
     console.log("Iniciando siembra de datos para @store-system...");
 
+    const hashedPassword = await bcrypt.hash(logData.password, 10);
+
     const firstAdmin = await prisma.user.upsert({
         where: { email: logData.adminEmail },
         update: {
@@ -26,7 +27,7 @@ async function main() {
         },
         create: {
             email: logData.adminEmail,
-            password: logData.password,
+            password: hashedPassword,
             role: "ADMIN",
             isActive: true,
             isVerified: true,
