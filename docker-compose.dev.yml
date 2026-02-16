@@ -1,0 +1,32 @@
+services:
+    app:
+        build:
+            context: .
+            target: development
+        container_name: backend
+        image: store-system-backend:dev
+        deploy:
+            resources:
+                limits:
+                    cpus: 0.5
+                    memory: 1G
+        env_file:
+            - .env
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=file:/app/data/dev.db
+            - CHOKIDAR_USEPOLLING=true
+            - WATCHPACKER_POLLING=true
+        volumes:
+            - ./:/app
+            - ./data:/app/data
+            - node_modules:/app/node_modules
+            - pnpm_store:/app/pnpm_store
+        restart: unless-stopped
+        command: sh -c "pnpm rebuild better-sqlite3 && pnpm run db:generate && pnpm run db:migrate && pnpm run dev"
+
+volumes:
+    node_modules:
+    pnpm_store:

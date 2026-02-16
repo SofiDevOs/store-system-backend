@@ -111,6 +111,8 @@ dist
 # Serverless directories
 .serverless/
 
+.pnpm-store
+
 # FuseBox cache
 .fusebox/
 
@@ -142,3 +144,7 @@ vite.config.ts.timestamp-*
 
 /src/generated/prisma
 *.db
+
+.pnpm-store/
+pnpm-store/
+data/

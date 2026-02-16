@@ -1,39 +1,41 @@
+import { Result } from "../../shared/core/Result";
+
 interface ILoginPost {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 interface IUser {
-  id: string;
-  email: string;
-  password: string;
-  role: string;
-  isActive: boolean;
-  isVerified: boolean;
-  token: string|null;
-  tokenExpires: Date|null;
-  createdAt: Date;
-  updatedAt: Date;
+    id: string;
+    email: string;
+    password: string;
+    role: string;
+    isActive: boolean;
+    isVerified: boolean;
+    token: string | null;
+    tokenExpires: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface IEmployeeInfo {
-  email: string;
-  password: string;
-  token: string;
-  tokenExpires: Date;
+    email: string;
+    password: string;
+    token: string;
+    tokenExpires: Date;
 
-  name: string;
-  lastname: string;
-  birthdate: string;
-  rfc: string;
-  nss: string;
-  address: string;
-  salary: number;
+    name: string;
+    lastname: string;
+    birthdate: string;
+    rfc: string;
+    nss: string;
+    address: string;
+    salary: number;
 }
 
 interface IAuthService {
-  validateInfoUser(data: ILoginPost): Promise<void>;
-  createNewEmployee(data: IEmployeeInfo): Promise<void>;
+    validateInfoUser(data: ILoginPost): Promise<Result<string, Error>>;
+    createNewEmployee(data: IEmployeeInfo, requestingAdminEmail: string): Promise<Result<void, Error>>;
 }
 
-export { ILoginPost, IAuthService,IUser, IEmployeeInfo };
+export { ILoginPost, IAuthService, IUser, IEmployeeInfo };
