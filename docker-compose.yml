@@ -1,12 +1,14 @@
 services:
     app:
-        build: .
+        build:
+            context: .
+            target: production
         container_name: backend
         image: store-system-backend:1.0.0
         deploy:
             resources:
                 limits:
-                    cpus: 0.5
+                    cpus: '0.5'
                     memory: 1G
         env_file:
             - .env
@@ -18,4 +20,5 @@ services:
             - NODE_ENV=production
             - DATABASE_URL=file:/app/data/prod.db
         restart: unless-stopped
-        command: sh -c "pnpm exec prisma migrate deploy && pnpm run start"
+        user: node
+        command: sh -c "pnpm run db:migrate && pnpm run start"

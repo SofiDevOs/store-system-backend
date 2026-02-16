@@ -12,7 +12,7 @@ async function main() {
 
     const logData = {
         adminEmail: "mail@sofi.dev",
-        password: "sofievO",
+        password: "sofidevO",
     };
 
     console.log("Iniciando siembra de datos para @store-system...");

@@ -97,7 +97,7 @@ export class Server {
     private routes() {
         this.app.get(this.pathsWeb.home, (req: Request, res: Response) => {
             res.json({
-                "msg": "Welcome to Store System API"
+                msg: "Welcome to Store System API",
             });
         });
         this.app.use(this.pathsWeb.auth, AuthRouter);

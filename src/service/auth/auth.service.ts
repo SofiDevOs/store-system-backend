@@ -1,4 +1,5 @@
 import { prisma } from "../../config/prisma";
+import { Prisma } from "@prisma/client";
 import {
     IAuthService,
     IUser,
@@ -111,13 +112,22 @@ export class AuthService implements IAuthService {
         });
         console.log(user);
 
-        if (!user) return Result.fail<string, Error>(new NotFoundError("user not found"));
+        if (!user)
+            return Result.fail<string, Error>(
+                new NotFoundError("user not found"),
+            );
 
-        if (!user.isActive) return Result.fail<string, Error>(new UnauthorizedError("Usuario dado de baja"));
+        if (!user.isActive)
+            return Result.fail<string, Error>(
+                new UnauthorizedError("Usuario dado de baja"),
+            );
 
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) return Result.fail<string, Error>(new UnauthorizedError("Credenciales inválidas"));
+        if (!isPasswordValid)
+            return Result.fail<string, Error>(
+                new UnauthorizedError("Credenciales inválidas"),
+            );
 
         return Result.ok<string, Error>("Usuario validado correctamente");
     }
@@ -170,11 +180,10 @@ export class AuthService implements IAuthService {
      */
     public async createNewEmployee(
         payload: IEmployeeInfo,
-        requestingAdminEmail: string
+        requestingAdminEmail: string,
     ): Promise<Result<void, Error>> {
-
         const admin = await prisma.user.findUnique({
-            where: { email: requestingAdminEmail }
+            where: { email: requestingAdminEmail },
         });
 
         if (!admin) {
@@ -182,12 +191,15 @@ export class AuthService implements IAuthService {
         }
 
         if (admin.role !== "ADMIN") {
-            return Result.fail(new UnauthorizedError("Only admin users can create new employees"));
+            return Result.fail(
+                new UnauthorizedError(
+                    "Only admin users can create new employees",
+                ),
+            );
         }
 
         try {
-            await prisma.$transaction(async (tx) => {
-
+            await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
                 const user = await tx.user.create({
                     data: {
                         email: payload.email,
