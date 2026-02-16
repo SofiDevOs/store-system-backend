@@ -32,7 +32,6 @@ export class JWT {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(decode);
                     resolve(decode as string);
                 }
             });

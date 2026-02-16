@@ -102,15 +102,12 @@ export class AuthService implements IAuthService {
         data: ILoginPost,
     ): Promise<Result<string, Error>> {
         const { email, password } = data;
-        console.log(email);
-        console.log(password);
 
         const user: IUser | null = await prisma.user.findUnique({
             where: {
                 email,
             },
         });
-        console.log(user);
 
         if (!user)
             return Result.fail<string, Error>(
