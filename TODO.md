@@ -1,6 +1,6 @@
 # 📝 Roadmap de Implementación
 
-Este documento rastrea las tareas pendientes para completar el sistema de autenticación y seguridad.
+Tareas a implementar en el backend. si realizas alguna tarea de esta lista, por favor, marca el checkbox.
 
 ## 🔐 Autenticación JWT (Prioridad Alta)
 
@@ -31,6 +31,18 @@ El siguiente paso crítico es implementar la seguridad mediante JSON Web Tokens.
 - [ ] **Rate Limiting**: Implementar `express-rate-limit` para prevenir fuerza bruta
 - [ ] **Helmet**: Configurar headers de seguridad HTTP
 - [ ] **Logs**: Mejorar sistema de logs para auditoría de accesos
+
+## 📧 Notificaciones (Nodemailer)
+
+- [ ] **Configuración de Email**
+    - Instalar `nodemailer` y sus tipos (`@types/nodemailer`)
+    - Configurar variables de entorno (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`)
+    - Crear helper de envío de correos (`src/helpers/mailer.ts`)
+
+- [ ] **Notificación de Bienvenida**
+    - Crear plantilla HTML para bienvenida de nuevos empleados
+    - Integrar envío de email en `AuthService.createNewEmployee`
+    - Incluir credenciales temporales o link de activación en el correo
 
 ## 🧪 Testing
 
