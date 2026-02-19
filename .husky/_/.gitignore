@@ -1,0 +1,6 @@
+*
+!pre-commit
+!.gitignore
+# Husky pre-commit hook
+
+# This file is used by Husky to run pre-commit hooks.
