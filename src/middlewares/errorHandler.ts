@@ -1,4 +1,4 @@
-import { HttpError } from "../helpers/errors/error";
+import { HttpError } from "./errors/error";
 import { Request, Response, NextFunction } from "express";
 export const errorHandler = (
     error: any,

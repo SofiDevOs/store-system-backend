@@ -6,7 +6,7 @@ import {
     ILoginPost,
     IEmployeeInfo,
 } from "./IAuth.interface";
-import { NotFoundError, UnauthorizedError } from "../../helpers/errors/error";
+import { NotFoundError, UnauthorizedError } from "../../middlewares/errors/error";
 import { Result } from "../../shared/core/Result";
 import bcrypt from "bcryptjs";
 

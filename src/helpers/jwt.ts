@@ -26,13 +26,13 @@ export class JWT {
         });
     }
 
-    static validateToken(token: string): Promise<string | null> {
+    static validateToken<T>(token: string): Promise<T> {
         return new Promise((resolve, reject) => {
             jwt.verify(token, JWT_SECRET_KEY as string, (err, decode) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(decode as string);
+                    return decode as T;
                 }
             });
         });

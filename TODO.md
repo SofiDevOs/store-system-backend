@@ -1,8 +1,8 @@
-# 📝 Roadmap de Implementación
+#  Roadmap de Implementación
 
 Tareas a implementar en el backend. si realizas alguna tarea de esta lista, por favor, marca el checkbox.
 
-## 🔐 Autenticación JWT (Prioridad Alta)
+##  Autenticación JWT (Prioridad Alta)
 
 El siguiente paso crítico es implementar la seguridad mediante JSON Web Tokens.
 
@@ -26,13 +26,13 @@ El siguiente paso crítico es implementar la seguridad mediante JSON Web Tokens.
     - Aplicar middleware `validateJWT` a rutas sensibles (ej. `/api/users`, `/api/employees`)
     - Verificar que solo usuarios autenticados puedan acceder
 
-## 🛡️ Mejoras de Seguridad
+##  Mejoras de Seguridad
 
 - [ ] **Rate Limiting**: Implementar `express-rate-limit` para prevenir fuerza bruta
 - [ ] **Helmet**: Configurar headers de seguridad HTTP
 - [ ] **Logs**: Mejorar sistema de logs para auditoría de accesos
 
-## 📧 Notificaciones (Nodemailer)
+##  Notificaciones (Nodemailer)
 
 - [ ] **Configuración de Email**
     - Instalar `nodemailer` y sus tipos (`@types/nodemailer`)
@@ -44,7 +44,7 @@ El siguiente paso crítico es implementar la seguridad mediante JSON Web Tokens.
     - Integrar envío de email en `AuthService.createNewEmployee`
     - Incluir credenciales temporales o link de activación en el correo
 
-## 🧪 Testing
+##  Testing
 
 - [ ] Crear tests unitarios para el generador de JWT
 - [ ] Crear tests de integración para el flujo de login y acceso protegido
