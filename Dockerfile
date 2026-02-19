@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y openssl python3 make g++ && rm -rf /var
 # Dependencies stage
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml ./
+# Ensure lifecycle scripts that live in `scripts/` are available during install
+COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 # Build stage
