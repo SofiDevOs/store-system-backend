@@ -29,12 +29,16 @@ export class JWT {
     static validateToken<T>(token: string): Promise<T> {
         return new Promise((resolve, reject) => {
             jwt.verify(token, JWT_SECRET_KEY as string, (err, decode) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    return decode as T;
+                if (err) return reject(err);
+                if (!JWT.isJwtPayload<T>(decode)) {
+                    return reject(new Error("Invalid token payload"));
                 }
+                resolve(decode);
             });
         });
+    }
+
+    private static isJwtPayload<T>(payload: unknown): payload is T {
+        return typeof payload === "object" && payload !== null;
     }
 }
