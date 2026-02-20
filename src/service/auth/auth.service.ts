@@ -6,7 +6,10 @@ import {
     ILoginPost,
     IEmployeeInfo,
 } from "./IAuth.interface";
-import { NotFoundError, UnauthorizedError } from "../../middlewares/errors/error";
+import {
+    NotFoundError,
+    UnauthorizedError,
+} from "../../middlewares/errors/error";
 import { Result } from "../../shared/core/Result";
 import bcrypt from "bcryptjs";
 
@@ -99,7 +102,7 @@ export class AuthService implements IAuthService {
      * ```
      */
     public async validateInfoUser(
-        data: ILoginPost,
+        data: ILoginPost
     ): Promise<Result<string, Error>> {
         const { email, password } = data;
 
@@ -111,19 +114,19 @@ export class AuthService implements IAuthService {
 
         if (!user)
             return Result.fail<string, Error>(
-                new NotFoundError("user not found"),
+                new NotFoundError("user not found")
             );
 
         if (!user.isActive)
             return Result.fail<string, Error>(
-                new UnauthorizedError("Usuario dado de baja"),
+                new UnauthorizedError("Usuario dado de baja")
             );
 
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid)
             return Result.fail<string, Error>(
-                new UnauthorizedError("Credenciales inválidas"),
+                new UnauthorizedError("Credenciales inválidas")
             );
 
         return Result.ok<string, Error>("Usuario validado correctamente");
@@ -177,7 +180,7 @@ export class AuthService implements IAuthService {
      */
     public async createNewEmployee(
         payload: IEmployeeInfo,
-        requestingAdminEmail: string,
+        requestingAdminEmail: string
     ): Promise<Result<void, Error>> {
         const admin = await prisma.user.findUnique({
             where: { email: requestingAdminEmail },
@@ -190,8 +193,8 @@ export class AuthService implements IAuthService {
         if (admin.role !== "ADMIN") {
             return Result.fail(
                 new UnauthorizedError(
-                    "Only admin users can create new employees",
-                ),
+                    "Only admin users can create new employees"
+                )
             );
         }
 
@@ -210,8 +213,8 @@ export class AuthService implements IAuthService {
                         name: payload.name,
                         lastname: payload.lastname,
                         birthdate: new Date(payload.birthdate),
-                        rfc: payload.rfc,
                         nss: payload.nss,
+                        rfc: payload.rfc,
                         address: payload.address,
                         salary: payload.salary,
                         userId: user.id,
