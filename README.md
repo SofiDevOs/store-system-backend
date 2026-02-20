@@ -284,6 +284,31 @@ docker compose down
 
 Los datos se persisten en `./data/prod.db` en el host.
 
+### Solución de Problemas (Troubleshooting)
+
+#### Error: "User not found" en Docker
+
+Si al iniciar sesión obtienes un error de usuario no encontrado, es probable que la base de datos dentro del contenedor (`data/dev.db`) no tenga los datos iniciales.
+
+**Solución Automática:**
+El proyecto está configurado para ejecutar `pnpm db:seed` automáticamente al iniciar el contenedor en modo desarrollo.
+Si tienes este problema, **reconstruye el contenedor**:
+
+```bash
+docker-compose down
+docker-compose up --build
+```
+
+**Solución Manual:**
+Si prefieres sincronizar tu base de datos local con la de Docker manualmente:
+
+```bash
+# Copiar tu DB local a la carpeta data (usada por Docker)
+sudo cp dev.db data/dev.db
+# Ajustar permisos (Docker crea archivos como root)
+sudo chown $(whoami):$(whoami) data/dev.db
+```
+
 ## 🎯 Funcionalidades
 
 ### Administradores
@@ -337,6 +362,12 @@ PUT    /api/employees/:id    # Actualizar empleado
 ```
 
 _Más endpoints en desarrollo..._
+
+## 🗺️ Roadmap y Tareas Pendientes
+
+El desarrollo sigue un plan estructurado. Para ver los próximos pasos, especialmente relacionados con la implementación de **JWT** y seguridad, consulta:
+
+👉 [TODO.md](./TODO.md)
 
 ## 💻 Desarrollo
 

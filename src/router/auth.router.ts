@@ -5,9 +5,11 @@ import { validateProperties } from "../middlewares/validate-properties";
 import { AuthService } from "../service/auth/auth.service";
 import { getCsrfToken } from "../controller/auth/getCsrfToken";
 const router = Router();
-//Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
+// Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
 const authService = new AuthService();
 const authController = new AuthController(authService);
+
+const createNewEmployee = authController.registerPost;
 
 router.get("/csrf-token", getCsrfToken);
 
@@ -18,9 +20,9 @@ router.post(
         check("password", "El password es obligatorio"),
         validateProperties,
     ],
-    authController.loginPost,
+    authController.loginPost
 );
 
-router.post("/register", [validateProperties], authController.registerPost);
+router.post("/register", [validateProperties], createNewEmployee);
 
 export default router;

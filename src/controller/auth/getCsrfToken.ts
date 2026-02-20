@@ -1,9 +1,9 @@
-import {Request, Response} from "express"
+import { Request, Response } from "express";
 
 // interface Icsrf extends Request{csrfToken?: string}
 
-export const getCsrfToken = (req:Request, res:Response)=>{
+export const getCsrfToken = (req: Request, res: Response) => {
     res.json({
-        csrfToken: req.csrfToken
-    })
-}
+        csrfToken: req.csrfToken,
+    });
+};

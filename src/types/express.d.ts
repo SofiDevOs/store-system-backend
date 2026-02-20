@@ -1,9 +1,10 @@
-import  "express";
-
+import "express";
+import {JwtUser} from "./user.type"
 declare global {
-    namespace Express{
+    namespace Express {
         interface Request {
             csrfToken?: string;
+            user?: JwtUser;
         }
     }
 }

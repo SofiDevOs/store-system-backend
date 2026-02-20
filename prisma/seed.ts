@@ -5,7 +5,7 @@ import { prisma } from "../src/config/prisma";
 async function main() {
     if (process.env.NODE_ENV === "production") {
         console.error(
-            "Critical: Seed script is blocked in production environment.",
+            "Critical: Seed script is blocked in production environment."
         );
         return;
     }
@@ -15,7 +15,9 @@ async function main() {
         password: "sofidevO",
     };
 
-    console.log("Iniciando siembra de datos para @store-system...");
+    console.log("==================================================");
+    console.log("Iniciando siembra de datos para store-system...");
+    console.log("==================================================");
 
     const firstAdmin = await prisma.user.upsert({
         where: { email: logData.adminEmail },
