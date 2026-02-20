@@ -148,3 +148,5 @@ vite.config.ts.timestamp-*
 .pnpm-store/
 pnpm-store/
 data/
+
+!.husky/
