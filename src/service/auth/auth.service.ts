@@ -199,7 +199,7 @@ export class AuthService implements IAuthService {
         }
 
         try {
-            await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+            await prisma.$transaction(async (tx) => {
                 const user = await tx.user.create({
                     data: {
                         email: payload.email,
