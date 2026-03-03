@@ -1,6 +1,7 @@
 build/*
 .env
 .env.local
+.env.test
 node_modules
 dist
 coverage
@@ -11,6 +12,7 @@ coverage
 npm-debug.log*
 pnpm-debug.log*
 .DS_Store
+test.db
 dev.db
 dev.db-shm
 dev.db-wal
