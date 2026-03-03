@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { IAuthService } from "../../service/auth/IAuth.interface";
 import { verificationEmailTemplate } from "../../templates/verificationEmail";
 import { sendVerificationEmail } from "../../helpers/mailer";
+import { JWT } from "../../helpers/jwt";
+import { generateTempPassword } from "../../helpers/temporalPassword";
 //Aqui solo manejasmos las rtestpuestas HTTP
 
 export class AuthController {
@@ -24,32 +26,43 @@ export class AuthController {
             }
         );
     };
+
     public registerPost = async (req: Request, res: Response) => {
         const formData = req.body;
-        const requestingAdminEmail = res.locals.email;
-        const result = await this.authService.createNewEmployee(
-            formData,
-            requestingAdminEmail
-        );
+        const token = await JWT.generateJWT({
+            email: formData.email as string,
+            name: formData.name as string,
+        });
+
+        const result = await this.authService.createNewEmployee({
+            ...formData,
+            token: token!,
+            tokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        });
+
         result.fold(
             async () => {
-                const tempPassword = formData.token;
-                const url = `${process.env.FRONTEND_URL}/verify-email?token=${tempPassword}`;
+                const tempPassword = generateTempPassword(12);
 
-                const emailContent = verificationEmailTemplate({
-                    url,
-                    tempPassword,
-                });
                 await sendVerificationEmail(
                     formData.email,
-                    emailContent,
-                    "Verifica tu email"
+                    token!,
+                    tempPassword
                 );
+                res.status(201);
                 res.json({ msg: "Employee created successfully" });
             },
             (error) => {
                 throw error;
             }
         );
+    };
+
+    public verifyEmail = async (req: Request, res: Response) => {
+        const { token } = req.query;
+
+        if (!token || typeof token !== "string") {
+            return res.status(400).json({ message: "Token is required" });
+        }
     };
 }

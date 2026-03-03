@@ -4,6 +4,8 @@ import { AuthController } from "../controller/auth/Auth.controller";
 import { validateProperties } from "../middlewares/validate-properties";
 import { AuthService } from "../service/auth/auth.service";
 import { getCsrfToken } from "../controller/auth/getCsrfToken";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware";
+import { authenticate } from "../middlewares/authMiddleware";
 const router = Router();
 // Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
 const authService = new AuthService();
@@ -23,6 +25,6 @@ router.post(
     authController.loginPost
 );
 
-router.post("/register", [validateProperties], createNewEmployee);
+router.post("/register", [validateProperties],authenticate, ensureAdminMiddleware, createNewEmployee);
 
 export default router;

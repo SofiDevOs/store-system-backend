@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import AuthRouter from "../router/auth.router";
 import { csrfMiddleware, verifyCsrfToken } from "../middlewares/csrfMiddleware";
 import { Response, Request } from "express";
+import { authenticate } from "../middlewares/authMiddleware";
+import { errorHandler } from "../middlewares/errorHandler";
 
 /**
  * HTTP server that wires together Express middleware and route handlers.
@@ -57,6 +59,7 @@ export class Server {
         this.port = port;
         this.middlewares();
         this.routes();
+        this.app.use(errorHandler);
     }
 
     /**

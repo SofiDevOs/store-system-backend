@@ -12,7 +12,10 @@
         "db:generate": "pnpm exec prisma generate",
         "db:migrate": "pnpm exec prisma migrate dev",
         "db:studio": "pnpm exec prisma studio",
-        "db:seed": "pnpm exec prisma db seed"
+        "db:seed": "pnpm exec prisma db seed",
+        "test:prepare": "DATABASE_URL=file:./test.db prisma db push --force-reset",
+        "test:integration": "npm run test:prepare && vitest run test/integration",
+        "test:unit": "vitest run src"
     },
     "keywords": [
         "express",
@@ -31,7 +34,6 @@
         "cors": "2.8.6",
         "dotenv": "17.2.4",
         "express": "5.2.1",
-        "express-async-errors": "^3.1.1",
         "express-validator": "7.3.1",
         "jsonwebtoken": "9.0.3",
         "nodemailer": "^8.0.1",
@@ -44,13 +46,16 @@
         "@types/express": "5.0.6",
         "@types/jsonwebtoken": "9.0.10",
         "@types/nodemailer": "^7.0.10",
+        "@types/supertest": "^7.2.0",
         "husky": "^9.1.7",
         "lint-staged": "^16.2.7",
         "nodemon": "3.1.11",
         "prettier": "^3.8.1",
+        "supertest": "^7.2.2",
         "ts-node": "10.9.2",
         "tsx": "^4.21.0",
-        "typescript": "5.9.3"
+        "typescript": "5.9.3",
+        "vitest": "^4.0.18"
     },
     "lint-staged": {
         "*.{js,ts,jsx,tsx,json,css,scss,md}": "prettier --write"

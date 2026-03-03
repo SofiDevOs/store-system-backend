@@ -180,24 +180,7 @@ export class AuthService implements IAuthService {
      */
     public async createNewEmployee(
         payload: IEmployeeInfo,
-        requestingAdminEmail: string
     ): Promise<Result<void, Error>> {
-        const admin = await prisma.user.findUnique({
-            where: { email: requestingAdminEmail },
-        });
-
-        if (!admin) {
-            return Result.fail(new NotFoundError("Admin user not found"));
-        }
-
-        if (admin.role !== "ADMIN") {
-            return Result.fail(
-                new UnauthorizedError(
-                    "Only admin users can create new employees"
-                )
-            );
-        }
-
         try {
             await prisma.$transaction(async (tx) => {
                 const user = await tx.user.create({
@@ -227,4 +210,34 @@ export class AuthService implements IAuthService {
             return Result.fail(error as Error);
         }
     }
+
+  public async verifyEmail(token: string, email: string): Promise<Result<void, Error>> {
+
+     try {
+        await prisma.$transaction(async (tx) => {
+             const user = await tx.user.findUnique({
+                where: { token, email },
+            });
+
+            if (!user) {
+                throw new NotFoundError("Token no válido");
+            }
+
+            await tx.user.update({
+                where: { id: user.id },
+                data: {
+                    isVerified: true,
+                    token: null,
+                    tokenExpires: null,
+                },
+            });
+        });
+
+        return Result.ok<void, Error>(undefined);
+    } catch (error) {
+        return Result.fail(error as Error);
+    }
+
+  }
+
 }
