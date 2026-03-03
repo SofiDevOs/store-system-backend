@@ -29,6 +29,13 @@ export class AuthController {
 
     public registerPost = async (req: Request, res: Response) => {
         const formData = req.body;
+
+        // El token temporal se estaba recibiendo desde el front. Hacerlo de esa forma permite
+        // falsear el token. Es decir, puedo enviar un token en el body, e ingresar directamente a la ruta de verificación
+        // de un correo que no es mio y verificarlo sin tener acceso al correo.
+        // No creo que sea comodo que el admin genere manualmente la contraseña temporal, que lo haga el sistema!!
+        const tempPassword = generateTempPassword(12);
+
         const token = await JWT.generateJWT({
             email: formData.email as string,
             name: formData.name as string,
@@ -38,12 +45,14 @@ export class AuthController {
             ...formData,
             token: token!,
             tokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+            password: tempPassword,
         });
 
         result.fold(
             async () => {
-                const tempPassword = generateTempPassword(12);
-
+                // se estaba usando el token como contraseña temporal, lo cual no tiene sentido.
+                // Ademas que se estaba verificando desde el front, lo cual es aun peor.
+                // se estab creando un template y ni siquiera se estaba usando WTF.
                 await sendVerificationEmail(
                     formData.email,
                     token!,

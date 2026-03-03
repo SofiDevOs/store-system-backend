@@ -3,8 +3,9 @@ import request from "supertest";
 import { Server } from "../../../src/model/server";
 import { createOrUpdateAdmin } from "../../utils/create-admin";
 import { getAuthCookie } from "../../utils/auth-helper";
+
 vi.mock("../../../src/helpers/mailer", () => ({
-    sendVerificationEmail: vi.fn().mockResolvedValue(true), // Simula que el correo se envió con éxito
+    sendVerificationEmail: vi.fn().mockResolvedValue(true),
 }));
 
 describe("Register Employee", () => {
@@ -35,6 +36,7 @@ describe("Register Employee", () => {
                 nss: "12345678901",
                 address: "123 Main St",
                 salary: 15000,
-            }).expect(201);
+            })
+            .expect(201);
     });
 });

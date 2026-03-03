@@ -8,7 +8,8 @@ export const sendVerificationEmail = async (
     token: string,
     tempPass: string
 ) => {
-    const url = `{$process.env.}/verify-email?token=${token}`;
+    // Se verificara desde el backend, Es necesario añadir la env de SITE.
+    const url = `${process.env.SITE}/verify-email?token=${token}`;
 
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
