@@ -15,7 +15,8 @@
         "db:seed": "pnpm exec prisma db seed",
         "test:prepare": "DATABASE_URL=file:./test.db prisma db push --force-reset",
         "test:integration": "npm run test:prepare && vitest run test/integration",
-        "test:unit": "vitest run src"
+        "test:unit": "vitest run src",
+        "swagger": "ts-node ./swagger.ts"
     },
     "keywords": [
         "express",
@@ -27,6 +28,7 @@
         "@prisma/adapter-better-sqlite3": "7.3.0",
         "@prisma/client": "7.3.0",
         "@types/multer": "^2.1.0",
+        "@types/swagger-ui-express": "^4.1.8",
         "bcrypt": "^6.0.0",
         "bcryptjs": "3.0.3",
         "better-sqlite3": "12.6.2",
@@ -40,7 +42,8 @@
         "jsonwebtoken": "9.0.3",
         "multer": "^2.1.1",
         "nodemailer": "^8.0.1",
-        "prisma": "7.3.0"
+        "prisma": "7.3.0",
+        "swagger-ui-express": "^5.0.1"
     },
     "devDependencies": {
         "@types/bcrypt": "^6.0.0",
@@ -51,10 +54,12 @@
         "@types/nodemailer": "^7.0.10",
         "@types/supertest": "^7.2.0",
         "husky": "^9.1.7",
+        "js-yaml": "^4.1.1",
         "lint-staged": "^16.2.7",
         "nodemon": "3.1.11",
         "prettier": "^3.8.1",
         "supertest": "^7.2.2",
+        "swagger-autogen": "^2.23.7",
         "ts-node": "10.9.2",
         "tsx": "^4.21.0",
         "typescript": "5.9.3",

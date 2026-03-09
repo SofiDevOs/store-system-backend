@@ -6,7 +6,8 @@ import { csrfMiddleware, verifyCsrfToken } from "../middlewares/csrfMiddleware";
 import { Response, Request } from "express";
 import { authenticate } from "../middlewares/authMiddleware";
 import { errorHandler } from "../middlewares/errorHandler";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "../../swagger-output.json";
 /**
  * HTTP server that wires together Express middleware and route handlers.
  *
@@ -37,7 +38,6 @@ export class Server {
 
     /** TCP port the server will bind to. */
     private readonly port: number;
-
     /**
      * Map of route prefixes used by {@link Server.routes | routes()}.
      *
@@ -49,7 +49,6 @@ export class Server {
         home: "/",
         auth: "/api/v1/auth",
     };
-
     /**
      * Creates a new `Server` instance and configures middleware + routes.
      *
@@ -61,7 +60,6 @@ export class Server {
         this.routes();
         this.app.use(errorHandler);
     }
-
     /**
      * Registers global middleware in the required order.
      *
@@ -87,7 +85,6 @@ export class Server {
         this.app.use(csrfMiddleware);
         this.app.use(verifyCsrfToken);
     }
-
     /**
      * Mounts route handlers onto the Express application.
      *
@@ -98,6 +95,11 @@ export class Server {
      * @see {@link https://expressjs.com/en/guide/routing.html | Express Routing Guide}
      */
     private routes() {
+        this.app.use(
+            "/docs",
+            swaggerUi.serve,
+            swaggerUi.setup(swaggerDocument)
+        );
         this.app.get(this.pathsWeb.home, (req: Request, res: Response) => {
             res.json({
                 msg: "Welcome to Store System API",
@@ -105,7 +107,6 @@ export class Server {
         });
         this.app.use(this.pathsWeb.auth, AuthRouter);
     }
-
     /**
      * Starts the HTTP server on the configured {@link Server.port | port}.
      *
@@ -121,8 +122,8 @@ export class Server {
         this.app.listen(this.port, () => {
             console.log(
                 chalk.bgBlue.green(
-                    `Server running on port: http://localhost:${this.port}`,
-                ),
+                    `Server running on port: http://localhost:${this.port}`
+                )
             );
         });
     }

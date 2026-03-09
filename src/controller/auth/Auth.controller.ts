@@ -35,8 +35,6 @@ export class AuthController {
 
                     res.json({
                         msg: "Login exitoso",
-                        user: userData,
-                        csrfToken: res.locals.csrfToken,
                     });
                 } catch (err) {
                     console.error("Login JWT Generation Error:", err);
