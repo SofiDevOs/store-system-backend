@@ -5,8 +5,8 @@ type ExpiresIn = "2h" | "1d" | "30m" | "7d";
 
 export class JWT {
     static generateJWT(
-        data: { name: string; email: string },
-        duration: ExpiresIn = "2h",
+        data: Record<string, any>,
+        duration: ExpiresIn = "2h"
     ): Promise<string | null> {
         return new Promise((resolve, reject) => {
             jwt.sign(
@@ -21,7 +21,7 @@ export class JWT {
                     } else {
                         resolve(token!);
                     }
-                },
+                }
             );
         });
     }

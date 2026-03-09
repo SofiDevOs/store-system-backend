@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma";
-import { Prisma } from "@prisma/client";
+
 import {
     IAuthService,
     IUser,
@@ -103,7 +103,7 @@ export class AuthService implements IAuthService {
      */
     public async validateInfoUser(
         data: ILoginPost
-    ): Promise<Result<string, Error>> {
+    ): Promise<Result<{ id: string; role: string; email: string }, Error>> {
         const { email, password } = data;
 
         const user: IUser | null = await prisma.user.findUnique({
@@ -113,23 +113,30 @@ export class AuthService implements IAuthService {
         });
 
         if (!user)
-            return Result.fail<string, Error>(
-                new NotFoundError("user not found")
-            );
+            return Result.fail<
+                { id: string; role: string; email: string },
+                Error
+            >(new NotFoundError("user not found"));
 
         if (!user.isActive)
-            return Result.fail<string, Error>(
-                new UnauthorizedError("Usuario dado de baja")
-            );
+            return Result.fail<
+                { id: string; role: string; email: string },
+                Error
+            >(new UnauthorizedError("Usuario dado de baja"));
 
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid)
-            return Result.fail<string, Error>(
-                new UnauthorizedError("Credenciales inválidas")
-            );
+            return Result.fail<
+                { id: string; role: string; email: string },
+                Error
+            >(new UnauthorizedError("Credenciales inválidas"));
 
-        return Result.ok<string, Error>("Usuario validado correctamente");
+        return Result.ok<{ id: string; role: string; email: string }, Error>({
+            id: user.id,
+            role: user.role,
+            email: user.email,
+        });
     }
     /**
      * Creates a new employee by atomically inserting both User and Employee records.
@@ -179,10 +186,10 @@ export class AuthService implements IAuthService {
      * ```
      */
     public async createNewEmployee(
-        payload: IEmployeeInfo,
+        payload: IEmployeeInfo
     ): Promise<Result<void, Error>> {
         try {
-            await prisma.$transaction(async (tx) => {
+            await prisma.$transaction(async (tx: any) => {
                 const user = await tx.user.create({
                     data: {
                         email: payload.email,
@@ -200,6 +207,7 @@ export class AuthService implements IAuthService {
                         rfc: payload.rfc,
                         address: payload.address,
                         salary: payload.salary,
+                        profileImage: payload.profileImage,
                         userId: user.id,
                     },
                 });
@@ -211,33 +219,33 @@ export class AuthService implements IAuthService {
         }
     }
 
-  public async verifyEmail(token: string, email: string): Promise<Result<void, Error>> {
+    public async verifyEmail(
+        token: string,
+        email: string
+    ): Promise<Result<void, Error>> {
+        try {
+            await prisma.$transaction(async (tx: any) => {
+                const user = await tx.user.findUnique({
+                    where: { token, email },
+                });
 
-     try {
-        await prisma.$transaction(async (tx) => {
-             const user = await tx.user.findUnique({
-                where: { token, email },
+                if (!user) {
+                    throw new NotFoundError("Token no válido");
+                }
+
+                await tx.user.update({
+                    where: { id: user.id },
+                    data: {
+                        isVerified: true,
+                        token: null,
+                        tokenExpires: null,
+                    },
+                });
             });
 
-            if (!user) {
-                throw new NotFoundError("Token no válido");
-            }
-
-            await tx.user.update({
-                where: { id: user.id },
-                data: {
-                    isVerified: true,
-                    token: null,
-                    tokenExpires: null,
-                },
-            });
-        });
-
-        return Result.ok<void, Error>(undefined);
-    } catch (error) {
-        return Result.fail(error as Error);
+            return Result.ok<void, Error>(undefined);
+        } catch (error) {
+            return Result.fail(error as Error);
+        }
     }
-
-  }
-
 }

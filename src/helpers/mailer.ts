@@ -8,16 +8,16 @@ export const sendVerificationEmail = async (
     token: string,
     tempPass: string
 ) => {
-    // Se verificara desde el backend, Es necesario añadir la env de SITE.
-    const url = `${process.env.SITE}/verify-email?token=${token}`;
+    const url = `${process.env.SITE || "http://localhost:4321"}/verify-email?token=${token}`;
 
+    const port = Number(process.env.MAIL_PORT) || 587;
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
-        port: Number(process.env.MAIL_PORT),
-        secure: true,
+        port,
+        secure: port === 465,
         auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS,
+            user: process.env.MAIL_USER || "user",
+            pass: process.env.MAIL_PASS || "pass",
         },
     });
     await transporter.sendMail({

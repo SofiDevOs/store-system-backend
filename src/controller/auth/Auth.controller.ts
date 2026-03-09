@@ -6,6 +6,8 @@ import { JWT } from "../../helpers/jwt";
 import { generateTempPassword } from "../../helpers/temporalPassword";
 //Aqui solo manejasmos las rtestpuestas HTTP
 
+import { uploadImageToCloudinary } from "../../helpers/cloudinary";
+
 export class AuthController {
     //En el constructor va el argumento que maneja las acciones del servicio con su debida interface
     constructor(private readonly authService: IAuthService) {}
@@ -16,11 +18,34 @@ export class AuthController {
         // result es un Either, por lo que usamos fold para manejar ambos casos: éxito y error
         // si hay un error lo propagamos para que el errorHandler lo maneje, si no hay error devolvemos la respuesta exitosa
         result.fold(
-            (resp) =>
-                res.json({
-                    msg: resp,
-                    csrfToken: res.locals.csrfToken,
-                }),
+            async (userData) => {
+                try {
+                    const token = await JWT.generateJWT({
+                        id: userData.id,
+                        email: userData.email,
+                        role: userData.role,
+                    });
+
+                    res.cookie("token", token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                        sameSite: "lax",
+                        maxAge: 24 * 60 * 60 * 1000, // 1 dia
+                    });
+
+                    res.json({
+                        msg: "Login exitoso",
+                        user: userData,
+                        csrfToken: res.locals.csrfToken,
+                    });
+                } catch (err) {
+                    console.error("Login JWT Generation Error:", err);
+                    res.status(500).json({
+                        message:
+                            "No se pudo generar la sesión del usuario debido a un error interno del servidor",
+                    });
+                }
+            },
             (error) => {
                 throw error;
             }
@@ -29,12 +54,21 @@ export class AuthController {
 
     public registerPost = async (req: Request, res: Response) => {
         const formData = req.body;
-
-        // El token temporal se estaba recibiendo desde el front. Hacerlo de esa forma permite
-        // falsear el token. Es decir, puedo enviar un token en el body, e ingresar directamente a la ruta de verificación
-        // de un correo que no es mio y verificarlo sin tener acceso al correo.
-        // No creo que sea comodo que el admin genere manualmente la contraseña temporal, que lo haga el sistema!!
         const tempPassword = generateTempPassword(12);
+        let profileImageUrl: string | undefined = undefined;
+        const file = (req as any).file;
+        if (file) {
+            try {
+                profileImageUrl = await uploadImageToCloudinary(
+                    file.buffer,
+                    "store0system"
+                );
+            } catch (error) {
+                return res
+                    .status(500)
+                    .json({ message: "Error uploading profile image" });
+            }
+        }
 
         const token = await JWT.generateJWT({
             email: formData.email as string,
@@ -43,6 +77,8 @@ export class AuthController {
 
         const result = await this.authService.createNewEmployee({
             ...formData,
+            salary: Number(formData.salary),
+            profileImage: profileImageUrl,
             token: token!,
             tokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
             password: tempPassword,
@@ -50,14 +86,18 @@ export class AuthController {
 
         result.fold(
             async () => {
-                // se estaba usando el token como contraseña temporal, lo cual no tiene sentido.
-                // Ademas que se estaba verificando desde el front, lo cual es aun peor.
-                // se estab creando un template y ni siquiera se estaba usando WTF.
-                await sendVerificationEmail(
-                    formData.email,
-                    token!,
-                    tempPassword
-                );
+                try {
+                    await sendVerificationEmail(
+                        formData.email,
+                        token!,
+                        tempPassword
+                    );
+                } catch (emailError) {
+                    console.error(
+                        "Error al enviar el correo de verificación:",
+                        emailError
+                    );
+                }
                 res.status(201);
                 res.json({ msg: "Employee created successfully" });
             },

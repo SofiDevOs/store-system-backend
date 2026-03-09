@@ -31,10 +31,13 @@ interface IEmployeeInfo {
     nss: string;
     address: string;
     salary: number;
+    profileImage: string;
 }
 
 interface IAuthService {
-    validateInfoUser(data: ILoginPost): Promise<Result<string, Error>>;
+    validateInfoUser(
+        data: ILoginPost
+    ): Promise<Result<{ id: string; role: string; email: string }, Error>>;
     createNewEmployee(data: IEmployeeInfo): Promise<Result<void, Error>>;
 }
 

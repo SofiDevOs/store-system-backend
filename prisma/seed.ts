@@ -11,8 +11,8 @@ async function main() {
     }
 
     const logData = {
-        adminEmail: "mail@sofi.dev",
-        password: "sofidevO",
+        adminEmail: "mail@admin.com",
+        password: "password",
     };
 
     console.log("==================================================");
@@ -41,6 +41,7 @@ async function main() {
                     nss: "00000000000",
                     address: "Store System Main Office",
                     salary: 0.0,
+                    profileImage: "https://api.dicebear.com/9.x/bottts/webp",
                 },
             },
         },

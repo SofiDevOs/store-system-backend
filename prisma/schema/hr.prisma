@@ -9,6 +9,7 @@ model Employee {
   vacationDays   Int         @default(0)
   birthdate      DateTime
   isRehired      Boolean     @default(false)
+  profileImage   String
   createdAt      DateTime    @default(now())
 
   // Relationships

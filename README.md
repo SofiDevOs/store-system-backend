@@ -27,8 +27,9 @@ API REST para sistema integral de gestión de tiendas, recursos humanos, inventa
 - 💰 **Sistema de Ventas** (ventas, pagos, devoluciones, descuentos)
 - 🔄 **Gestión de Turnos** con sistema de intercambio entre empleados
 - 📊 **Reportes y Métricas** de desempeño
-- 🐳 **Dockerizado** para fácil deployment
-- 🔒 **Encriptación de contraseñas** automática con bcrypt
+- 🐳 **Dockerizado** para fácil deployment (incluye Base de Datos y Prisma Studio integrados)
+- 🔒 **Seguridad y Encriptación** con `bcrypt`, `jsonwebtoken` (en cookies HttpOnly) y tokens CSRF.
+- 🖼️ **Subida de Imágenes** a Cloudinary para avatares de empleados.
 - 🎯 **Validación de datos** con express-validator
 
 ## 🛠 Tecnologías
@@ -123,17 +124,19 @@ PORT=8080
 NODE_ENV=development
 
 # Database
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="file:/app/data/dev.db" # Si corres localmente "file:./dev.db"
 
 # JWT
 JWT_SECRET_KEY=your-super-secret-key-change-this
 
-# Database (opcional para otros motores)
-DB_HOST=
-DB_PORT=
-DB_DATABASE=
-DB_USER=
-DB_PASSWORD=
+# Cloudinary (Imágenes)
+CLOUDINARY_CLOUD_NAME=tu-cloud-name
+CLOUDINARY_API_KEY=tu-api-key
+CLOUDINARY_API_SECRET=tu-api-secret
+
+# Nodemailer (Correos)
+EMAIL_USER=tu-email@gmail.com
+EMAIL_PASS=tu-password-de-app
 ```
 
 ### 4. Configurar la base de datos
@@ -334,34 +337,19 @@ sudo chown $(whoami):$(whoami) data/dev.db
 
 ## 🔗 API Endpoints
 
-### Autenticación
+### Autenticación & CSRF
 
-```
-POST   /api/auth/register     # Registro de usuario
-POST   /api/auth/login        # Inicio de sesión
+```http
+GET    /api/auth/csrf-token   # Obtener token CSRF para formularios
+POST   /api/auth/login        # Inicio de sesión (devuelve info + setea cookie HttpOnly)
+POST   /api/auth/register     # (Admin) Registro de nuevo empleado con foto
 POST   /api/auth/verify       # Verificar email
 POST   /api/auth/refresh      # Renovar token
 ```
 
-### Usuarios
+_Nota:_ `register` espera multipart/form-data para procesar `profileImage`.
 
-```
-GET    /api/users            # Listar usuarios (Admin)
-GET    /api/users/:id        # Obtener usuario
-PUT    /api/users/:id        # Actualizar usuario
-DELETE /api/users/:id        # Eliminar usuario (Admin)
-```
-
-### Empleados
-
-```
-GET    /api/employees        # Listar empleados
-POST   /api/employees        # Crear empleado (Admin)
-GET    /api/employees/:id    # Obtener empleado
-PUT    /api/employees/:id    # Actualizar empleado
-```
-
-_Más endpoints en desarrollo..._
+_Más endpoints en desarrollo (HR, Inventario y Ventas configuralos en `src/router/`)..._
 
 ## 🗺️ Roadmap y Tareas Pendientes
 

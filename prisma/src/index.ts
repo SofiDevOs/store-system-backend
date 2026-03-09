@@ -37,7 +37,7 @@ export const prisma = basePrisma.$extends({
                     const salt = await bcrypt.genSalt(10);
                     args.data.password = await bcrypt.hash(
                         args.data.password,
-                        salt,
+                        salt
                     );
                 }
                 return query(args);
@@ -50,7 +50,7 @@ export const prisma = basePrisma.$extends({
                     const salt = await bcrypt.genSalt(10);
                     args.data.password = await bcrypt.hash(
                         args.data.password,
-                        salt,
+                        salt
                     );
                 }
                 return query(args);
@@ -60,7 +60,7 @@ export const prisma = basePrisma.$extends({
                 if (args.create.password) {
                     args.create.password = await bcrypt.hash(
                         args.create.password,
-                        salt,
+                        salt
                     );
                 }
                 if (
@@ -69,7 +69,7 @@ export const prisma = basePrisma.$extends({
                 ) {
                     args.update.password = await bcrypt.hash(
                         args.update.password,
-                        salt,
+                        salt
                     );
                 }
                 return query(args);

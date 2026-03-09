@@ -10,6 +10,9 @@ const {
     DB_USER,
     JWT_SECRET_KEY,
     DATABASE_URL,
+    CLOUD_NAME,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
 } = process.env;
 
 export {
@@ -21,4 +24,7 @@ export {
     DB_USER,
     JWT_SECRET_KEY,
     DATABASE_URL,
+    CLOUD_NAME,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
 };
