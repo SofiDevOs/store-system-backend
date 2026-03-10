@@ -4,6 +4,7 @@ import { verificationEmailTemplate } from "../../templates/verificationEmail";
 import { sendVerificationEmail } from "../../helpers/mailer";
 import { JWT } from "../../helpers/jwt";
 import { generateTempPassword } from "../../helpers/temporalPassword";
+import { SITE } from "../../config/envs.config";
 //Aqui solo manejasmos las rtestpuestas HTTP
 
 import { uploadImageToCloudinary } from "../../helpers/cloudinary";
@@ -15,8 +16,7 @@ export class AuthController {
     public loginPost = async (req: Request, res: Response) => {
         const data = req.body;
         const result = await this.authService.validateInfoUser(data);
-        // result es un Either, por lo que usamos fold para manejar ambos casos: éxito y error
-        // si hay un error lo propagamos para que el errorHandler lo maneje, si no hay error devolvemos la respuesta exitosa
+
         result.fold(
             async (userData) => {
                 try {
@@ -30,7 +30,7 @@ export class AuthController {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === "production",
                         sameSite: "lax",
-                        maxAge: 24 * 60 * 60 * 1000, // 1 dia
+                        maxAge: 24 * 60 * 60 * 1000,
                     });
 
                     res.json({
@@ -71,6 +71,7 @@ export class AuthController {
         const token = await JWT.generateJWT({
             email: formData.email as string,
             name: formData.name as string,
+            lastName: formData.lastName as string,
         });
 
         const result = await this.authService.createNewEmployee({
@@ -107,9 +108,64 @@ export class AuthController {
 
     public verifyEmail = async (req: Request, res: Response) => {
         const { token } = req.query;
+        const frontendUrl = SITE || "http://localhost:4321";
 
         if (!token || typeof token !== "string") {
-            return res.status(400).json({ message: "Token is required" });
+            return res.redirect(`${frontendUrl}/login?error=missing_token`);
         }
+
+        try {
+            const decoded = await JWT.validateToken<{ email: string }>(token);
+
+            const result = await this.authService.verifyEmail(
+                token,
+                decoded.email
+            );
+
+            result.fold(
+                () => {
+                    res.redirect(`${frontendUrl}/login?verified=true`);
+                },
+                (error) => {
+                    res.redirect(
+                        `${frontendUrl}/login?error=${encodeURIComponent(error.message)}`
+                    );
+                }
+            );
+        } catch (error: any) {
+            res.redirect(`${frontendUrl}/login?error=invalid_or_expired_token`);
+        }
+    };
+
+    public resendVerification = async (req: Request, res: Response) => {
+        const { email } = req.body;
+
+        if (!email || typeof email !== "string") {
+            return res
+                .status(400)
+                .json({ message: "Se requiere un email válido" });
+        }
+
+        const result = await this.authService.resendVerificationToken(email);
+
+        result.fold(
+            async ({ token, tempPassword }) => {
+                try {
+                    await sendVerificationEmail(email, token, tempPassword);
+                    res.json({
+                        message:
+                            "Correo de verificación reenviado exitosamente",
+                    });
+                } catch (error) {
+                    console.error("Error al reenviar el correo:", error);
+                    res.status(500).json({
+                        message: "Error al enviar el correo",
+                    });
+                }
+            },
+            async (error) => {
+                res.status(400).json({ message: error.message });
+            }
+        );
     };
 }

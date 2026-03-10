@@ -13,6 +13,7 @@ const {
     CLOUD_NAME,
     CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET,
+    SITE,
 } = process.env;
 
 export {
@@ -27,4 +28,5 @@ export {
     CLOUD_NAME,
     CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET,
+    SITE,
 };

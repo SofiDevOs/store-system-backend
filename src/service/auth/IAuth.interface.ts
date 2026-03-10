@@ -34,11 +34,19 @@ interface IEmployeeInfo {
     profileImage: string;
 }
 
-interface IAuthService {
-    validateInfoUser(
-        data: ILoginPost
-    ): Promise<Result<{ id: string; role: string; email: string }, Error>>;
-    createNewEmployee(data: IEmployeeInfo): Promise<Result<void, Error>>;
+interface IAuthResponse {
+    id: string;
+    role: string;
+    email: string;
 }
 
-export { ILoginPost, IAuthService, IUser, IEmployeeInfo };
+interface IAuthService {
+    validateInfoUser(data: ILoginPost): Promise<Result<IAuthResponse, Error>>;
+    createNewEmployee(data: IEmployeeInfo): Promise<Result<void, Error>>;
+    verifyEmail(token: string, email: string): Promise<Result<void, Error>>;
+    resendVerificationToken(
+        email: string
+    ): Promise<Result<{ token: string; tempPassword: string }, Error>>;
+}
+
+export { ILoginPost, IAuthService, IUser, IEmployeeInfo, IAuthResponse };

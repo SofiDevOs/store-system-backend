@@ -7,6 +7,7 @@ import { getCsrfToken } from "../controller/auth/getCsrfToken";
 import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware";
 import { authenticate } from "../middlewares/authMiddleware";
 import { uploadMiddleware } from "../middlewares/uploadMiddleware";
+import { loginLimiter, verifyEmailLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 // Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
@@ -19,6 +20,7 @@ router.get("/csrf-token", getCsrfToken);
 
 router.post(
     "/login",
+    loginLimiter,
     [
         check("email", "Agregue un email valido").isEmail(),
         check("password", "El password es obligatorio"),
@@ -33,7 +35,7 @@ router.post(
     ensureAdminMiddleware,
     uploadMiddleware.single("profileImage"),
     [
-        check("name", "El nombre es obligatorio").notEmpty(),
+        check("name", "El nombre es obligaTrabajnadotorio").notEmpty(),
         check("lastname", "El apellido es obligatorio").notEmpty(),
         check("email", "Agregue un email valido").isEmail(),
         check(
@@ -53,6 +55,15 @@ router.post(
     authenticate,
     ensureAdminMiddleware,
     createNewEmployee
+);
+
+router.get("/verify-email", verifyEmailLimiter, authController.verifyEmail);
+
+router.post(
+    "/resend-verification",
+    verifyEmailLimiter,
+    [check("email", "Agregue un email valido").isEmail(), validateProperties],
+    authController.resendVerification
 );
 
 export default router;

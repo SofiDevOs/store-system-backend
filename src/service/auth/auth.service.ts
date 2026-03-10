@@ -5,6 +5,7 @@ import {
     IUser,
     ILoginPost,
     IEmployeeInfo,
+    IAuthResponse,
 } from "./IAuth.interface";
 import {
     NotFoundError,
@@ -103,36 +104,27 @@ export class AuthService implements IAuthService {
      */
     public async validateInfoUser(
         data: ILoginPost
-    ): Promise<Result<{ id: string; role: string; email: string }, Error>> {
+    ): Promise<Result<IAuthResponse, Error>> {
         const { email, password } = data;
 
-        const user: IUser | null = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        });
+        const user = await prisma.user.findUnique({ where: { email } });
 
         if (!user)
-            return Result.fail<
-                { id: string; role: string; email: string },
-                Error
-            >(new NotFoundError("user not found"));
-
+            return Result.fail<IAuthResponse, Error>(
+                new NotFoundError("user not found")
+            );
         if (!user.isActive)
-            return Result.fail<
-                { id: string; role: string; email: string },
-                Error
-            >(new UnauthorizedError("Usuario dado de baja"));
+            return Result.fail<IAuthResponse, Error>(
+                new UnauthorizedError("Usuario dado de baja")
+            );
 
-        // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid)
-            return Result.fail<
-                { id: string; role: string; email: string },
-                Error
-            >(new UnauthorizedError("Credenciales inválidas"));
+            return Result.fail<IAuthResponse, Error>(
+                new UnauthorizedError("Credenciales inválidas")
+            );
 
-        return Result.ok<{ id: string; role: string; email: string }, Error>({
+        return Result.ok<IAuthResponse, Error>({
             id: user.id,
             role: user.role,
             email: user.email,
@@ -244,6 +236,49 @@ export class AuthService implements IAuthService {
             });
 
             return Result.ok<void, Error>(undefined);
+        } catch (error) {
+            return Result.fail(error as Error);
+        }
+    }
+
+    public async resendVerificationToken(
+        email: string
+    ): Promise<Result<{ token: string; tempPassword: string }, Error>> {
+        try {
+            const user = await prisma.user.findUnique({ where: { email } });
+
+            if (!user) {
+                return Result.fail(new NotFoundError("Usuario no encontrado"));
+            }
+
+            if (user.isVerified) {
+                return Result.fail(new Error("El usuario ya está verificado"));
+            }
+
+            const { JWT } = await import("../../helpers/jwt");
+            const { generateTempPassword } =
+                await import("../../helpers/temporalPassword");
+            const tempPassword = generateTempPassword(12);
+
+            const token = await JWT.generateJWT({
+                email: user.email,
+            });
+            if (!token) {
+                return Result.fail(new Error("Error al generar el token"));
+            }
+            const hashedPassword = await bcrypt.hash(tempPassword, 10);
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    token,
+                    tokenExpires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+                    password: hashedPassword,
+                },
+            });
+            return Result.ok<{ token: string; tempPassword: string }, Error>({
+                token,
+                tempPassword,
+            });
         } catch (error) {
             return Result.fail(error as Error);
         }
