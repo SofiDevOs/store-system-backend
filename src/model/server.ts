@@ -1,13 +1,14 @@
 import chalk from "chalk";
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import AuthRouter from "../router/auth.router";
 import { csrfMiddleware, verifyCsrfToken } from "../middlewares/csrfMiddleware";
 import { Response, Request } from "express";
-import { authenticate } from "../middlewares/authMiddleware";
 import { errorHandler } from "../middlewares/errorHandler";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../../swagger-output.json";
+import { SITE } from "../config/envs.config";
 /**
  * HTTP server that wires together Express middleware and route handlers.
  *
@@ -80,6 +81,24 @@ export class Server {
      */
     private middlewares() {
         console.log(chalk.bgBlue.green("Executing middlewares..."));
+
+        const allowedOrigins = (SITE || "http://localhost:4321")
+            .split(",")
+            .map((origin) => origin.trim())
+            .filter(Boolean);
+
+        this.app.use(
+            cors({
+                origin: allowedOrigins,
+                credentials: true,
+                methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+                allowedHeaders: [
+                    "Content-Type",
+                    "Authorization",
+                    "X-CSRF-Token",
+                ],
+            })
+        );
         this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(csrfMiddleware);
