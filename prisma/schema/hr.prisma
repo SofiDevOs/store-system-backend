@@ -10,7 +10,10 @@ model Employee {
   birthdate      DateTime
   isRehired      Boolean     @default(false)
   profileImage   String?
+  position       String?
+  department     String?
   createdAt      DateTime    @default(now())
+  phone          String      @unique
 
   // Relationships
   user                User        @relation(fields: [userId], references: [id])
