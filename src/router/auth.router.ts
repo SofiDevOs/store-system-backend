@@ -3,19 +3,15 @@ import { check } from "express-validator";
 import { AuthController } from "../controller/auth/Auth.controller";
 import { validateProperties } from "../middlewares/validate-properties";
 import { AuthService } from "../service/auth/auth.service";
-import { getCsrfToken } from "../controller/auth/getCsrfToken";
 import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware";
 import { authenticate } from "../middlewares/authMiddleware";
 import { uploadMiddleware } from "../middlewares/uploadMiddleware";
 import { loginLimiter, verifyEmailLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
-// Ralizamos inyeccion de dependencias del service al controlador para un mejor orden y control.
 const authService = new AuthService();
 const authController = new AuthController(authService);
 
-router.get("/csrf-token", getCsrfToken);
-// login
 router.post(
     "/login",
     loginLimiter,

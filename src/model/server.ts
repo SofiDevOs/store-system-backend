@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import AuthRouter from "../router/auth.router";
+import SecurityRouter from "../router/security.router";
 import { csrfMiddleware, verifyCsrfToken } from "../middlewares/csrfMiddleware";
 import { Response, Request } from "express";
 import { errorHandler } from "../middlewares/errorHandler";
@@ -51,6 +52,7 @@ export class Server {
         home: "/",
         auth: "/api/v1/auth",
         employee: "/api/v1/employee",
+        security: "/api/v1/security",
     };
 
     /**
@@ -129,6 +131,7 @@ export class Server {
         });
         this.app.use(this.pathsWeb.auth, AuthRouter);
         this.app.use(this.pathsWeb.employee, employeeRouter);
+        this.app.use(this.pathsWeb.security, SecurityRouter);
     }
     /**
      * Starts the HTTP server on the configured {@link Server.port | port}.
