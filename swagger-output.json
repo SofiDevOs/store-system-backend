@@ -73,12 +73,12 @@
                                 "email": {
                                     "type": "string",
                                     "format": "email",
-                                    "example": "admin@store.com"
+                                    "example": "mail@admin.com"
                                 },
                                 "password": {
                                     "type": "string",
                                     "format": "password",
-                                    "example": "Admin1234!"
+                                    "example": "password"
                                 }
                             }
                         }
