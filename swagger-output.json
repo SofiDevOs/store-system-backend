@@ -2,29 +2,50 @@
     "swagger": "2.0",
     "info": {
         "title": "Store System API",
-        "description": "end points del store system XD",
+        "description": "API REST del Store System.\n\n**Flujo de autenticación:**\n1. `GET /api/v1/security/csrf-token` — obtén el token CSRF y cópialo.\n2. Pulsa **Authorize** e ingresa el valor en `csrfToken`.\n3. `POST /api/v1/auth/login` — inicia sesión; la cookie JWT se guarda automáticamente en el navegador.\n4. Ya puedes usar los endpoints protegidos.",
         "version": "1.0.0"
     },
     "host": "localhost:3000",
     "basePath": "/api/v1",
     "schemes": ["http"],
+    "securityDefinitions": {
+        "csrfToken": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "x-csrf-token",
+            "description": "Token CSRF obtenido desde GET /api/v1/security/csrf-token"
+        }
+    },
+    "tags": [
+        {
+            "name": "Security",
+            "description": "Endpoints de seguridad transversal"
+        },
+        {
+            "name": "Auth",
+            "description": "Autenticación y verificación de cuentas"
+        },
+        {
+            "name": "Employee",
+            "description": "Gestión de empleados (requiere rol ADMIN)"
+        }
+    ],
     "paths": {
-        "/auth/csrf-token": {
+        "/security/csrf-token": {
             "get": {
-                "description": "",
+                "tags": ["Security"],
+                "summary": "Obtener token CSRF",
+                "description": "Devuelve el token CSRF activo. Cópialo y úsalo como valor en el header `x-csrf-token` para todas las peticiones POST/PUT/DELETE/PATCH.",
+                "produces": ["application/json"],
                 "responses": {
                     "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "csrfToken": {
-                                            "type": "string",
-                                            "example": "c200*********************************"
-                                        }
-                                    }
+                        "description": "Token CSRF generado correctamente",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "csrfToken": {
+                                    "type": "string",
+                                    "example": "a3f8d1c2e4b5f6a7d8e9c0b1a2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1"
                                 }
                             }
                         }
@@ -34,61 +55,365 @@
         },
         "/auth/login": {
             "post": {
-                "description": "",
-                "RequestBody": {
-                    "desccricption": "completa los campos",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "email": {
-                                        "type": "string"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
+                "tags": ["Auth"],
+                "summary": "Iniciar sesión",
+                "description": "Valida las credenciales del usuario. En caso de éxito establece una cookie `token` (JWT, httpOnly) en el navegador.",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "security": [{ "csrfToken": [] }],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": ["email", "password"],
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "format": "email",
+                                    "example": "admin@store.com"
                                 },
-                                "required": true
+                                "password": {
+                                    "type": "string",
+                                    "format": "password",
+                                    "example": "Admin1234!"
+                                }
                             }
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "login exitoso"
+                        "description": "Login exitoso — cookie JWT establecida",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Login exitoso"
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Campos inválidos o faltantes" },
+                    "401": {
+                        "description": "Credenciales incorrectas o cuenta desactivada"
+                    },
+                    "429": {
+                        "description": "Demasiados intentos — rate limit activo"
+                    }
+                }
+            }
+        },
+        "/auth/verify-email": {
+            "get": {
+                "tags": ["Auth"],
+                "summary": "Verificar correo electrónico",
+                "description": "Activa la cuenta del empleado usando el token enviado por correo. Redirige al frontend al completarse.",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "required": true,
+                        "type": "string",
+                        "description": "Token JWT de verificación recibido por correo",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirección al frontend con resultado de la verificación"
+                    },
+                    "429": {
+                        "description": "Demasiados intentos — rate limit activo"
+                    }
+                }
+            }
+        },
+        "/auth/resend-verification": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Reenviar correo de verificación",
+                "description": "Genera un nuevo token de verificación y lo envía al correo del empleado. Solo funciona si la cuenta aún no está verificada.",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "security": [{ "csrfToken": [] }],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": ["email"],
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "format": "email",
+                                    "example": "empleado@store.com"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Correo reenviado exitosamente",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Correo de verificación reenviado exitosamente"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Email inválido o cuenta ya verificada"
+                    },
+                    "404": { "description": "Usuario no encontrado" },
+                    "429": {
+                        "description": "Demasiados intentos — rate limit activo"
+                    }
+                }
+            }
+        },
+        "/employee/": {
+            "get": {
+                "tags": ["Employee"],
+                "summary": "Listar todos los empleados",
+                "description": "Devuelve todos los empleados junto con su información de usuario (email, rol, estado). Requiere sesión activa con rol ADMIN.",
+                "produces": ["application/json"],
+                "security": [{ "csrfToken": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Lista de empleados",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "uuid-v4"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Carlos"
+                                    },
+                                    "lastname": {
+                                        "type": "string",
+                                        "example": "García"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Av. Siempreviva 742"
+                                    },
+                                    "birthdate": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "nss": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "rfc": {
+                                        "type": "string",
+                                        "example": "GARC900820XXX"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "5512345678"
+                                    },
+                                    "salary": {
+                                        "type": "number",
+                                        "example": 15000
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Cajero"
+                                    },
+                                    "department": {
+                                        "type": "string",
+                                        "example": "Ventas"
+                                    },
+                                    "profileImage": {
+                                        "type": "string",
+                                        "example": "https://res.cloudinary.com/..."
+                                    },
+                                    "vacationDays": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "isRehired": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "user": {
+                                        "type": "object",
+                                        "properties": {
+                                            "email": {
+                                                "type": "string",
+                                                "example": "carlos@store.com"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "example": "EMPLOYEE"
+                                            },
+                                            "isActive": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "isVerified": {
+                                                "type": "boolean",
+                                                "example": false
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "401": { "description": "No autenticado" },
+                    "403": {
+                        "description": "Acceso denegado — se requiere rol ADMIN"
                     }
                 }
             }
         },
-        "/auth/register": {
+        "/employee/create": {
             "post": {
-                "description": "",
+                "tags": ["Employee"],
+                "summary": "Crear nuevo empleado",
+                "description": "Crea un `User` y un `Employee` en una transacción atómica. Envía un correo con contraseña temporal. La foto de perfil es opcional.",
+                "consumes": ["multipart/form-data"],
+                "produces": ["application/json"],
+                "security": [{ "csrfToken": [] }],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "type": "string",
+                        "required": true,
+                        "description": "Nombre(s) del empleado",
+                        "x-example": "Carlos"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "lastname",
+                        "type": "string",
+                        "required": true,
+                        "description": "Apellido(s) del empleado",
+                        "x-example": "García"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "type": "string",
+                        "required": true,
+                        "description": "Correo electrónico",
+                        "x-example": "carlos@store.com"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "birthdate",
+                        "type": "string",
+                        "required": true,
+                        "description": "Fecha de nacimiento (YYYY-MM-DD)",
+                        "x-example": "1990-08-20"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phone",
+                        "type": "string",
+                        "required": true,
+                        "description": "Número de teléfono",
+                        "x-example": "5512345678"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "nss",
+                        "type": "string",
+                        "required": true,
+                        "description": "Número de Seguro Social",
+                        "x-example": "12345678901"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "rfc",
+                        "type": "string",
+                        "required": true,
+                        "description": "RFC del empleado",
+                        "x-example": "GARC900820XXX"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "address",
+                        "type": "string",
+                        "required": true,
+                        "description": "Dirección",
+                        "x-example": "Av. Siempreviva 742"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "salary",
+                        "type": "number",
+                        "required": true,
+                        "description": "Salario mensual",
+                        "x-example": 15000
+                    },
+                    {
+                        "in": "formData",
+                        "name": "position",
+                        "type": "string",
+                        "required": false,
+                        "description": "Puesto o cargo (opcional)",
+                        "x-example": "Cajero"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "department",
+                        "type": "string",
+                        "required": false,
+                        "description": "Departamento (opcional)",
+                        "x-example": "Ventas"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "profilePicture",
+                        "type": "file",
+                        "required": false,
+                        "description": "Foto de perfil (opcional)"
+                    }
+                ],
                 "responses": {
-                    "400": {
-                        "description": "Bad Request"
+                    "201": {
+                        "description": "Empleado creado — correo de verificación enviado",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "msg": {
+                                    "type": "string",
+                                    "example": "Employee created successfully"
+                                }
+                            }
+                        }
                     },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
+                    "400": { "description": "Campos inválidos o faltantes" },
+                    "401": { "description": "No autenticado" },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Acceso denegado — se requiere rol ADMIN"
+                    },
+                    "500": {
+                        "description": "Error interno al subir imagen o al enviar correo"
                     }
                 }
             }

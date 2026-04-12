@@ -39,6 +39,7 @@ async function main() {
                     birthdate: new Date("1990-01-01"),
                     rfc: "ADMIN-MASTER-01",
                     nss: "00000000000",
+                    phone: "0000000000",
                     address: "Store System Main Office",
                     salary: 0.0,
                     profileImage: "https://api.dicebear.com/9.x/bottts/webp",
