@@ -9,6 +9,7 @@ import { errorHandler } from "../middlewares/errorHandler";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../../swagger-output.json";
 import { SITE } from "../config/envs.config";
+import employeeRouter from "../router/employee.router";
 /**
  * HTTP server that wires together Express middleware and route handlers.
  *
@@ -49,7 +50,9 @@ export class Server {
     private pathsWeb = {
         home: "/",
         auth: "/api/v1/auth",
+        employee: "/api/v1/employee",
     };
+
     /**
      * Creates a new `Server` instance and configures middleware + routes.
      *
@@ -125,6 +128,7 @@ export class Server {
             });
         });
         this.app.use(this.pathsWeb.auth, AuthRouter);
+        this.app.use(this.pathsWeb.employee, employeeRouter);
     }
     /**
      * Starts the HTTP server on the configured {@link Server.port | port}.

@@ -14,10 +14,8 @@ const router = Router();
 const authService = new AuthService();
 const authController = new AuthController(authService);
 
-const createNewEmployee = authController.registerPost;
-
 router.get("/csrf-token", getCsrfToken);
-
+// login
 router.post(
     "/login",
     loginLimiter,
@@ -29,34 +27,7 @@ router.post(
     authController.loginPost
 );
 
-router.post(
-    "/register",
-    authenticate,
-    ensureAdminMiddleware,
-    uploadMiddleware.single("profileImage"),
-    [
-        check("name", "El nombre es obligaTrabajnadotorio").notEmpty(),
-        check("lastname", "El apellido es obligatorio").notEmpty(),
-        check("email", "Agregue un email valido").isEmail(),
-        check(
-            "birthdate",
-            "La fecha de nacimiento es obligatoria y debe ser una fecha válida"
-        )
-            .notEmpty()
-            .isDate(),
-        check("rfc", "El RFC es obligatorio").notEmpty(),
-        check("nss", "El NSS es obligatorio").notEmpty(),
-        check("address", "La dirección es obligatoria").notEmpty(),
-        check("salary", "El salario debe ser un número numérico")
-            .notEmpty()
-            .isNumeric(),
-        validateProperties,
-    ],
-    authenticate,
-    ensureAdminMiddleware,
-    createNewEmployee
-);
-
+// verify email
 router.get("/verify-email", verifyEmailLimiter, authController.verifyEmail);
 
 router.post(
