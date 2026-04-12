@@ -16,10 +16,10 @@ cloudinary.config({
 });
 
 /**
- * Sube una imagen a la carpeta específica de Cloudinary ('store0system' por defecto).
- * @param fileBuffer Buffer de la imagen en memoria
- * @param folderName Nombre de la carpeta en cloudinary
- * @returns Promesa con la URL segura (HTTPS) de la imagen
+ * Uploads an image to a specific Cloudinary folder ('store0system' by default).
+ * @param fileBuffer Buffer of the image in memory
+ * @param folderName Name of the folder in Cloudinary
+ * @returns Promise with the secure URL (HTTPS) of the image
  */
 export const uploadImageToCloudinary = (
     fileBuffer: Buffer,
