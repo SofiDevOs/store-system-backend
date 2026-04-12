@@ -18,22 +18,6 @@ interface IUser {
     updatedAt: Date;
 }
 
-interface IEmployeeInfo {
-    email: string;
-    password: string;
-    token: string;
-    tokenExpires: Date;
-
-    name: string;
-    lastname: string;
-    birthdate: string;
-    rfc: string;
-    nss: string;
-    address: string;
-    salary: number;
-    profileImage: string;
-}
-
 interface IAuthResponse {
     id: string;
     role: string;
@@ -42,11 +26,10 @@ interface IAuthResponse {
 
 interface IAuthService {
     validateInfoUser(data: ILoginPost): Promise<Result<IAuthResponse, Error>>;
-    createNewEmployee(data: IEmployeeInfo): Promise<Result<void, Error>>;
     verifyEmail(token: string, email: string): Promise<Result<void, Error>>;
     resendVerificationToken(
         email: string
     ): Promise<Result<{ token: string; tempPassword: string }, Error>>;
 }
 
-export { ILoginPost, IAuthService, IUser, IEmployeeInfo, IAuthResponse };
+export { ILoginPost, IAuthService, IUser, IAuthResponse };

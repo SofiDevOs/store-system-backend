@@ -1,12 +1,6 @@
 import { prisma } from "../../config/prisma";
 
-import {
-    IAuthService,
-    IUser,
-    ILoginPost,
-    IEmployeeInfo,
-    IAuthResponse,
-} from "./IAuth.interface";
+import { IAuthService, ILoginPost, IAuthResponse } from "./IAuth.interface";
 import {
     NotFoundError,
     UnauthorizedError,
@@ -129,86 +123,6 @@ export class AuthService implements IAuthService {
             role: user.role,
             email: user.email,
         });
-    }
-    /**
-     * Creates a new employee by atomically inserting both User and Employee records.
-     *
-     * Only users with ADMIN role are authorized to create new employees.
-     * The method validates the requesting admin's credentials before proceeding.
-     *
-     * Uses a Prisma transaction to ensure that both the authentication record (User)
-     * and HR record (Employee) are created together. If either creation fails,
-     * the entire operation is rolled back to maintain data consistency.
-     *
-     * @param payload - The employee information including credentials and
-     *   personal details (see {@link IEmployeeInfo}).
-     * @param requestingAdminEmail - Email of the admin user requesting to create the employee.
-     * @returns A `Result<void, Error>` that resolves to:
-     *   - `Result.ok` with `void` on successful creation.
-     *   - `Result.fail` with a {@link NotFoundError} if the admin user does not exist.
-     *   - `Result.fail` with an {@link UnauthorizedError} if the requesting user is not an admin.
-     *
-     * @see {@link https://www.prismaio.com/docs/concepts/components/prisma-client/transactions#interactive-transactions Prisma Interactive Transactions}
-     * @see {@link https://en.wikipedia.org/wiki/ACID Database ACID Properties}
-     * @see {@link https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html OWASP Authorization Guidelines}
-     * @see {@link https://www.prismaio.com/docs/concepts/database-connectors/postgresql#database-connection-url Database Connection}
-     *
-     * @example
-     * ```ts
-     * const authService = new AuthService();
-     *
-     * const result = await authService.createNewEmployee({
-     *   email: "new.hire@company.com",
-     *   password: "hashedPassword123",
-     *   token: "verificationToken",
-     *   tokenExpires: new Date("2026-03-01"),
-     *   name: "Carlos",
-     *   lastname: "Garcia",
-     *   birthdate: "1990-08-20",
-     *   rfc: "GARC900820XXX",
-     *   nss: "98765432101",
-     *   address: "456 Oak Ave",
-     *   salary: 18000,
-     * }, "admin@company.com");
-     *
-     * result.fold(
-     *   () => console.log("Employee created successfully"),
-     *   (error) => console.error(error.message),
-     * );
-     * ```
-     */
-    public async createNewEmployee(
-        payload: IEmployeeInfo
-    ): Promise<Result<void, Error>> {
-        try {
-            await prisma.$transaction(async (tx: any) => {
-                const user = await tx.user.create({
-                    data: {
-                        email: payload.email,
-                        password: payload.password,
-                        token: payload.token,
-                        tokenExpires: payload.tokenExpires,
-                    },
-                });
-                await tx.employee.create({
-                    data: {
-                        name: payload.name,
-                        lastname: payload.lastname,
-                        birthdate: new Date(payload.birthdate),
-                        nss: payload.nss,
-                        rfc: payload.rfc,
-                        address: payload.address,
-                        salary: payload.salary,
-                        profileImage: payload.profileImage,
-                        userId: user.id,
-                    },
-                });
-            });
-
-            return Result.ok<void, Error>(undefined);
-        } catch (error) {
-            return Result.fail(error as Error);
-        }
     }
 
     public async verifyEmail(

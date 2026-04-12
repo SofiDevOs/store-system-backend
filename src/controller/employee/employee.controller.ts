@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IAuthService } from "../../service/auth/IAuth.interface";
+import { IEmployeeService } from "../../service/employee/IEmployee.interface";
 import { sendVerificationEmail } from "../../helpers/mailer";
 import { JWT } from "../../helpers/jwt";
 import { generateTempPassword } from "../../helpers/temporalPassword";
@@ -7,7 +7,17 @@ import { generateTempPassword } from "../../helpers/temporalPassword";
 import { uploadImageToCloudinary } from "../../helpers/cloudinary";
 
 export class EmployeeController {
-    constructor(private readonly authService: IAuthService) {}
+    constructor(private readonly employeeService: IEmployeeService) {}
+
+    public getAll = async (req: Request, res: Response) => {
+        const result = await this.employeeService.getAll();
+        result.fold(
+            (employees) => res.json(employees),
+            (error) => {
+                throw error;
+            }
+        );
+    };
 
     public create = async (req: Request, res: Response) => {
         const formData = req.body;
@@ -33,7 +43,7 @@ export class EmployeeController {
             lastName: formData.lastName as string,
         });
 
-        const result = await this.authService.createNewEmployee({
+        const result = await this.employeeService.createNewEmployee({
             ...formData,
             salary: Number(formData.salary),
             profileImage: profileImageUrl,
