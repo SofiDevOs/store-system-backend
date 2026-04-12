@@ -14,7 +14,7 @@ const authService = new AuthService();
 const employeeController = new EmployeeController(authService);
 
 employeeRouter.post(
-    "/register",
+    "/",
     authenticate,
     ensureAdminMiddleware,
     uploadMiddleware.single("profileImage"),
