@@ -19,10 +19,10 @@ employeeRouter.get(
 );
 
 employeeRouter.post(
-    "/create",
+    "/",
     authenticate,
     ensureAdminMiddleware,
-    uploadMiddleware.single("profilePicture"),
+    uploadMiddleware.single("profileImage"),
     [
         check("name", "El nombre es obligatorio").notEmpty(),
         check("lastname", "El apellido es obligatorio").notEmpty(),
