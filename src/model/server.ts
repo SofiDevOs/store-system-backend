@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../../swagger-output.json";
 import { SITE } from "../config/envs.config";
 import employeeRouter from "../router/employee.router";
+import profileRouter from "../router/profile.router";
 /**
  * HTTP server that wires together Express middleware and route handlers.
  *
@@ -52,6 +53,7 @@ export class Server {
         home: "/",
         auth: "/api/v1/auth",
         employee: "/api/v1/employee",
+        profile: "/api/v1/profile",
         security: "/api/v1/security",
     };
 
@@ -131,6 +133,7 @@ export class Server {
         });
         this.app.use(this.pathsWeb.auth, AuthRouter);
         this.app.use(this.pathsWeb.employee, employeeRouter);
+        this.app.use(this.pathsWeb.profile, profileRouter);
         this.app.use(this.pathsWeb.security, SecurityRouter);
     }
     /**

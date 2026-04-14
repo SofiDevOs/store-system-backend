@@ -24,6 +24,7 @@ employeeRouter.post(
     ensureAdminMiddleware,
     uploadMiddleware.single("profileImage"),
     [
+        check("role", "El rol es obligatorio").notEmpty(),
         check("name", "El nombre es obligatorio").notEmpty(),
         check("lastname", "El apellido es obligatorio").notEmpty(),
         check("email", "Agregue un email valido").isEmail(),

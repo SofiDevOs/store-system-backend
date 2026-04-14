@@ -120,7 +120,7 @@ export class AuthService implements IAuthService {
 
         return Result.ok<IAuthResponse, Error>({
             id: user.id,
-            role: user.role,
+            role: user.role as IAuthResponse["role"],
             email: user.email,
         });
     }

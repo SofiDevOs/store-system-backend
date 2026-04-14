@@ -63,6 +63,7 @@ export class EmployeeService implements IEmployeeService {
                     data: {
                         email: payload.email,
                         password: payload.password,
+                        role: payload.role,
                         token: payload.token,
                         tokenExpires: payload.tokenExpires,
                     },

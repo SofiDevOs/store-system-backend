@@ -9,7 +9,7 @@ interface IUser {
     id: string;
     email: string;
     password: string;
-    role: string;
+    role: "ADMIN" | "EMPLOYEE" | "MANAGER";
     isActive: boolean;
     isVerified: boolean;
     token: string | null;
@@ -20,7 +20,7 @@ interface IUser {
 
 interface IAuthResponse {
     id: string;
-    role: string;
+    role: "ADMIN" | "EMPLOYEE" | "MANAGER";
     email: string;
 }
 

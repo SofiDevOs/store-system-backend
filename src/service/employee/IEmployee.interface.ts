@@ -5,6 +5,7 @@ interface IEmployeeInfo {
     password: string;
     token: string;
     tokenExpires: Date;
+    role: string;
 
     name: string;
     lastname: string;
