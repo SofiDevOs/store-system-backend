@@ -109,6 +109,7 @@ export class AuthController {
     };
 
     public logout = (req: Request, res: Response) => {
+        res.setHeader("Clear-Site-Data", '"cache", "cookies"');
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
