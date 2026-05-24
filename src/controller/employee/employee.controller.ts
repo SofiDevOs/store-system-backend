@@ -43,7 +43,7 @@ export class EmployeeController {
             lastName: formData.lastName as string,
         });
 
-        const result = await this.employeeService.createNewEmployee({
+        const result = await this.employeeService.create({
             ...formData,
             salary: Number(formData.salary),
             profileImage: profileImageUrl,
