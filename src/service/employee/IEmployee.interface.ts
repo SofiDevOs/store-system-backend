@@ -21,8 +21,13 @@ interface IEmployeeInfo {
 }
 
 interface IEmployeeService {
-    createNewEmployee(data: IEmployeeInfo): Promise<Result<void, Error>>;
+    create(data: IEmployeeInfo): Promise<Result<void, Error>>;
     getAll(): Promise<Result<IEmployeeInfo[], Error>>;
+    getById(employeeId: string): Promise<Result<IEmployeeInfo, Error>>;
+    update(
+        employeeId: string,
+        updateData: Partial<IEmployeeInfo>
+    ): Promise<Result<void, Error>>;
 }
 
 export { IEmployeeInfo, IEmployeeService };

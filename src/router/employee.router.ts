@@ -46,4 +46,11 @@ employeeRouter.post(
     employeeController.create
 );
 
+employeeRouter.put(
+    "/:id",
+    authenticate,
+    ensureAdminMiddleware,
+    employeeController.update
+);
+
 export default employeeRouter;

@@ -54,9 +54,7 @@ export class EmployeeService implements IEmployeeService {
      * );
      * ```
      */
-    public async createNewEmployee(
-        payload: IEmployeeInfo
-    ): Promise<Result<void, Error>> {
+    public async create(payload: IEmployeeInfo): Promise<Result<void, Error>> {
         try {
             await prisma.$transaction(async (tx: any) => {
                 const user = await tx.user.create({
@@ -91,7 +89,6 @@ export class EmployeeService implements IEmployeeService {
             return Result.fail(error as Error);
         }
     }
-
     public async getAll(): Promise<Result<any[], Error>> {
         try {
             const employees = await prisma.employee.findMany({
@@ -107,6 +104,76 @@ export class EmployeeService implements IEmployeeService {
                 },
             });
             return Result.ok(employees);
+        } catch (error) {
+            return Result.fail(error as Error);
+        }
+    }
+    public async getById(
+        employeeId: string
+    ): Promise<Result<IEmployeeInfo, Error>> {
+        try {
+            const employee = await prisma.employee.findUnique({
+                where: { id: employeeId },
+                select: {
+                    name: true,
+                    lastname: true,
+                    birthdate: true,
+                    rfc: true,
+                    nss: true,
+                    address: true,
+                    phone: true,
+                    salary: true,
+                    position: true,
+                    department: true,
+                    profileImage: true,
+                },
+                include: {
+                    user: {
+                        select: {
+                            email: true,
+                            role: true,
+                            isActive: true,
+                            isVerified: true,
+                        },
+                    },
+                },
+            });
+            if (!employee) {
+                return Result.fail(new Error("Employee not found"));
+            }
+            const employeeInfo: IEmployeeInfo = {
+                email: employee.user.email,
+                role: employee.user.role,
+                name: employee.name,
+                lastname: employee.lastname,
+                birthdate: employee.birthdate.toISOString().split("T")[0],
+                rfc: employee.rfc,
+                nss: employee.nss,
+                address: employee.address,
+                phone: employee.phone,
+                salary: employee.salary,
+                position: employee.position || undefined,
+                department: employee.department || undefined,
+                profileImage: employee.profileImage || undefined,
+                password: "",
+                token: "",
+                tokenExpires: new Date(),
+            };
+            return Result.ok<IEmployeeInfo, Error>(employeeInfo);
+        } catch (error) {
+            return Result.fail(error as Error);
+        }
+    }
+    public async update(
+        employeeId: string,
+        updateData: Partial<IEmployeeInfo>
+    ): Promise<Result<void, Error>> {
+        try {
+            await prisma.employee.update({
+                where: { id: employeeId },
+                data: updateData,
+            });
+            return Result.ok<void, Error>(undefined);
         } catch (error) {
             return Result.fail(error as Error);
         }

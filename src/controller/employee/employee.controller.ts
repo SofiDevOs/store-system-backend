@@ -74,4 +74,31 @@ export class EmployeeController {
             }
         );
     };
+
+    public update = async (req: Request, res: Response) => {
+        const employeeId = req.params.id as string;
+        const updateData = req.body;
+        const result = await this.employeeService.update(
+            employeeId,
+            updateData
+        );
+
+        result.fold(
+            () => res.json({ msg: "Employee updated successfully" }),
+            (error) => {
+                throw error;
+            }
+        );
+    };
+
+    public getById = async (req: Request, res: Response) => {
+        const employeeId = req.params.id as string;
+        const result = await this.employeeService.getById(employeeId);
+        result.fold(
+            (employee) => res.json(employee),
+            (error) => {
+                throw error;
+            }
+        );
+    };
 }
