@@ -1,6 +1,6 @@
 import { prisma } from "../../config/prisma";
-import { HttpError, NotFoundError } from "../../middlewares/errors/error";
 import { Result } from "../../shared/core/Result";
+import { EmployeeNotFoundError } from "./_errors";
 import { IEmployeeInfo, IEmployeeService } from "./IEmployee.interface";
 
 /**
@@ -115,21 +115,7 @@ export class EmployeeService implements IEmployeeService {
         try {
             const employee = await prisma.employee.findUnique({
                 where: { id: employeeId },
-                select: {
-                    name: true,
-                    lastname: true,
-                    birthdate: true,
-                    rfc: true,
-                    nss: true,
-                    address: true,
-                    phone: true,
-                    salary: true,
-                    position: true,
-                    department: true,
-                    profileImage: true,
-                    isRehired: true,
-                },
-                include: {
+                include: { 
                     user: {
                         select: {
                             email: true,
@@ -137,11 +123,11 @@ export class EmployeeService implements IEmployeeService {
                             isActive: true,
                             isVerified: true,
                         },
-                    },
-                },
+                    }
+                }
             });
             if (!employee) {
-                return Result.fail(new NotFoundError("Employee not found"));
+                return Result.fail(new EmployeeNotFoundError(employeeId));
             }
             const employeeInfo: IEmployeeInfo = {
                 email: employee.user.email,
@@ -152,11 +138,11 @@ export class EmployeeService implements IEmployeeService {
                 rfc: employee.rfc,
                 nss: employee.nss,
                 address: employee.address,
-                phone: employee.phone,
-                salary: employee.salary,
-                position: employee.position || undefined,
-                department: employee.department || undefined,
-                profileImage: employee.profileImage || undefined,
+                phone: "",
+                salary: 20000,
+                position: "",
+                department: "",
+                profileImage: "",
                 password: "",
                 token: "",
                 tokenExpires: new Date(),
