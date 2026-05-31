@@ -5,7 +5,6 @@ import { validateProperties } from "../middlewares/validate-properties";
 import { AuthService } from "../service/auth/auth.service";
 import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware";
 import { authenticate } from "../middlewares/authMiddleware";
-import { uploadMiddleware } from "../middlewares/uploadMiddleware";
 import { loginLimiter, verifyEmailLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();

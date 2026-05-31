@@ -1,4 +1,5 @@
 import { prisma } from "../../config/prisma";
+import { HttpError, NotFoundError } from "../../middlewares/errors/error";
 import { Result } from "../../shared/core/Result";
 import { IEmployeeInfo, IEmployeeService } from "./IEmployee.interface";
 
@@ -126,6 +127,7 @@ export class EmployeeService implements IEmployeeService {
                     position: true,
                     department: true,
                     profileImage: true,
+                    isRehired: true,
                 },
                 include: {
                     user: {
@@ -139,7 +141,7 @@ export class EmployeeService implements IEmployeeService {
                 },
             });
             if (!employee) {
-                return Result.fail(new Error("Employee not found"));
+                return Result.fail(new NotFoundError("Employee not found"));
             }
             const employeeInfo: IEmployeeInfo = {
                 email: employee.user.email,

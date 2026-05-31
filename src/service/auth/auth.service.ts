@@ -142,6 +142,7 @@ export class AuthService implements IAuthService {
                 await tx.user.update({
                     where: { id: user.id },
                     data: {
+                        isActive: true,
                         isVerified: true,
                         token: null,
                         tokenExpires: null,

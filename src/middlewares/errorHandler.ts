@@ -6,6 +6,7 @@ export const errorHandler = (
     res: Response,
     _next: NextFunction,
 ) => {
+    console.log("Error caught by errorHandler middleware:", error);
     if (error instanceof HttpError) {
         return res.status(error.httpCode).json({
             status: error.httpCode,

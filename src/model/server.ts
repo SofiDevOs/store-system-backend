@@ -52,7 +52,7 @@ export class Server {
     private pathsWeb = {
         home: "/",
         auth: "/api/v1/auth",
-        employee: "/api/v1/employee",
+        employee: "/api/v1/employees",
         profile: "/api/v1/profile",
         security: "/api/v1/security",
     };

@@ -46,6 +46,13 @@ employeeRouter.post(
     employeeController.create
 );
 
+employeeRouter.get(
+    "/:id",
+    authenticate,
+    ensureAdminMiddleware,
+    employeeController.getById
+);
+
 employeeRouter.put(
     "/:id",
     authenticate,
