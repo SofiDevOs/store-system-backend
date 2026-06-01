@@ -3,8 +3,7 @@ import request from "supertest";
 import jwt from "jsonwebtoken";
 
 export async function getAuthCookie(app: any, admin: any) {
-    const res = await request(app).get("/api/v1/auth/csrf-token");
-
+    const res = await request(app).get("/api/v1/security/csrf-token");
     const csrfToken = res.body.csrfToken;
 
     let cookies = res.headers["set-cookie"] || [];

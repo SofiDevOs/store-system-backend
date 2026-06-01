@@ -23,6 +23,7 @@ export async function createOrUpdateAdmin() {
                     nss: "00000000000",
                     address: "Store System Main Office",
                     salary: 0.0,
+                    phone: "5551234567",
                 },
             },
         },

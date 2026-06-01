@@ -17,26 +17,28 @@ describe("Register Employee", () => {
     beforeAll(async () => {
         const admin = await createOrUpdateAdmin();
         const auth = await getAuthCookie(app, admin);
+
         csrfToken = auth.csrfToken;
         cookie = auth.cookie;
     });
 
     it("should register a new Employee", async () => {
         const res = await request(app)
-            .post("/api/v1/auth/register")
+            .post("/api/v1/employees")
             .set("x-csrf-token", csrfToken)
             .set("Cookie", cookie)
             .send({
+                role: "ADMIN",
                 email: "test@example.com",
-                password: "Password123!",
-                name: "John",
-                lastname: "Doe",
-                birthdate: "01/01/1990",
-                rfc: "GARC900101XXX",
+                name: "john",
+                lastname: "doe",
+                birthdate: "1995-04-15",
+                rfc: "garc900101xxx",
                 nss: "12345678901",
-                address: "123 Main St",
+                address: "123 main st",
                 salary: 15000,
+                phone: "555-1234",
             })
-            .expect(201);
+        expect(res.status).toBe(201);
     });
 });
