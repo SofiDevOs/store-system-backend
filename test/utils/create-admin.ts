@@ -5,14 +5,12 @@ export async function createOrUpdateAdmin() {
     return prisma.user.upsert({
         where: { email: "test@admin.com" },
         update: {
-            isActive: true,
             isVerified: true,
         },
         create: {
             email: "test@admin.com",
             password: "Password123!",
             role: "ADMIN",
-            isActive: true,
             isVerified: true,
             employee: {
                 create: {

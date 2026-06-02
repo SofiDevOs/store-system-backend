@@ -107,10 +107,6 @@ export class AuthService implements IAuthService {
             return Result.fail<IAuthResponse, Error>(
                 new NotFoundError("user not found")
             );
-        if (!user.isActive)
-            return Result.fail<IAuthResponse, Error>(
-                new UnauthorizedError("Usuario dado de baja")
-            );
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid)
@@ -142,7 +138,6 @@ export class AuthService implements IAuthService {
                 await tx.user.update({
                     where: { id: user.id },
                     data: {
-                        isActive: true,
                         isVerified: true,
                         token: null,
                         tokenExpires: null,
