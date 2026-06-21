@@ -3,6 +3,7 @@ import {
     UploadApiResponse,
     UploadApiErrorResponse,
 } from "cloudinary";
+
 import {
     CLOUD_NAME,
     CLOUDINARY_API_KEY,
@@ -21,9 +22,10 @@ cloudinary.config({
  * @param folderName Name of the folder in Cloudinary
  * @returns Promise with the secure URL (HTTPS) of the image
  */
+
 export const uploadImageToCloudinary = (
     fileBuffer: Buffer,
-    folderName: string = "store0system"
+    folderName: string = "store-system"
 ): Promise<string> => {
     return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(

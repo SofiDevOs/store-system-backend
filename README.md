@@ -1,38 +1,37 @@
-# 🏪 Store System Backend
+# Store System Backend
 
 API REST para sistema integral de gestión de tiendas, recursos humanos, inventario y ventas, construida con Node.js, Express, TypeScript y Prisma ORM con SQLite.
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
-- [Características](#-características)
-- [Tecnologías](#-tecnologías)
-- [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación](#-instalación)
-- [Configuración](#-configuración)
-- [Scripts Disponibles](#-scripts-disponibles)
-- [Base de Datos](#-base-de-datos)
-- [Docker](#-docker)
-- [Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
-- [Funcionalidades](#-funcionalidades)
-- [API Endpoints](#-api-endpoints)
-- [Desarrollo](#-desarrollo)
-- [Licencia](#-licencia)
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Arquitectura del Proyecto](#arquitectura-del-proyecto)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Scripts Disponibles](#scripts-disponibles)
+- [Base de Datos](#base-de-datos)
+- [Docker](#docker)
+- [Funcionalidades](#funcionalidades)
+- [API Endpoints](#api-endpoints)
+- [Desarrollo](#desarrollo)
+- [Licencia](#licencia)
 
-## ✨ Características
+## Características
 
-- 🔐 **Autenticación y Autorización** con JWT
-- 👥 **Gestión de Recursos Humanos** (empleados, nóminas, asistencias, permisos)
-- 📦 **Control de Inventario** (productos, almacenes, transferencias, logs de stock)
-- 💰 **Sistema de Ventas** (ventas, pagos, devoluciones, descuentos)
-- 🔄 **Gestión de Turnos** con sistema de intercambio entre empleados
-- 📊 **Reportes y Métricas** de desempeño
-- 🐳 **Dockerizado** para fácil deployment (incluye Base de Datos y Prisma Studio integrados)
-- 🔒 **Seguridad y Encriptación** con `bcrypt`, `jsonwebtoken` (en cookies HttpOnly) y tokens CSRF.
-- 🖼️ **Subida de Imágenes** a Cloudinary para avatares de empleados.
-- 🎯 **Validación de datos** con express-validator
+- **Autenticación y Autorización** con JWT
+- **Gestión de Recursos Humanos** (empleados, nóminas, asistencias, permisos)
+- **Control de Inventario** (productos, almacenes, transferencias, logs de stock)
+- **Sistema de Ventas** (ventas, pagos, devoluciones, descuentos)
+- **Gestión de Turnos** con sistema de intercambio entre empleados
+- **Reportes y Métricas** de desempeño
+- **Dockerizado** para fácil deployment (incluye Base de Datos y Prisma Studio integrados)
+- **Seguridad y Encriptación** con `bcrypt`, `jsonwebtoken` (en cookies HttpOnly) y tokens CSRF
+- **Subida de Imágenes** a Cloudinary para avatares de empleados
+- **Validación de datos** con express-validator
 
-## 🛠 Tecnologías
+## Tecnologías
 
 ### Core
 
@@ -59,7 +58,7 @@ API REST para sistema integral de gestión de tiendas, recursos humanos, inventa
 - **tsx** - Ejecución rápida de TypeScript
 - **pnpm** - Gestor de paquetes eficiente
 
-## 📁 Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 ```
 store-system-backend/
@@ -71,35 +70,34 @@ store-system-backend/
 │   │   ├── inventory.prisma # Inventario
 │   │   └── sales.prisma     # Ventas
 │   ├── migrations/          # Historial de migraciones
-│   ├── seed.ts             # Datos iniciales
+│   ├── seed.ts              # Datos iniciales
 │   └── src/
-│       └── index.ts        # Cliente Prisma extendido
+│       └── index.ts         # Cliente Prisma extendido
 ├── src/
-│   ├── config/             # Configuraciones
+│   ├── config/              # Configuraciones
 │   │   ├── db.config.ts
 │   │   ├── envs.config.ts
 │   │   └── prisma.ts
-│   ├── controller/         # Controladores
-│   ├── service/            # Lógica de negocio
-│   ├── router/             # Rutas
-│   ├── middlewares/        # Middlewares personalizados
-│   ├── helpers/            # Utilidades
-│   ├── model/              # Modelos de servidor
-│   └── app.ts             # Punto de entrada
-├── docker-compose.yml      # Orquestación Docker
-├── Dockerfile             # Imagen Docker
-├── prisma.config.ts       # Configuración Prisma
+│   ├── controller/          # Controladores
+│   ├── service/             # Lógica de negocio
+│   ├── router/              # Rutas
+│   ├── middlewares/         # Middlewares personalizados
+│   ├── helpers/             # Utilidades
+│   ├── model/               # Modelos de servidor
+│   └── app.ts               # Punto de entrada
+├── docker-compose.yml       # Orquestación Docker
+├── Dockerfile               # Imagen Docker
+├── prisma.config.ts         # Configuración Prisma
 └── package.json
-
 ```
 
-## 📦 Requisitos Previos
+## Requisitos Previos
 
 - **Node.js** >= 22.x
 - **pnpm** >= 10.28.2 (instalado automáticamente con corepack)
 - **Docker** y **Docker Compose** (opcional, para deployment)
 
-## 🚀 Instalación
+## Instalación
 
 ### 1. Clonar el repositorio
 
@@ -165,19 +163,19 @@ pnpm start
 
 El servidor estará disponible en `http://localhost:8080`
 
-## ⚙️ Configuración
+## Configuración
 
 ### Cliente Prisma Extendido
 
 El proyecto utiliza un cliente Prisma extendido que automáticamente:
 
-- ✅ Hashea contraseñas en operaciones `create`, `update` y `upsert`
-- ✅ Usa bcrypt con salt rounds de 10
-- ✅ Mantiene el patrón singleton en desarrollo
+- Hashea contraseñas en operaciones `create`, `update` y `upsert`
+- Usa bcrypt con salt rounds de 10
+- Mantiene el patrón singleton en desarrollo
 
 Ubicación: [prisma/src/index.ts](prisma/src/index.ts)
 
-## 📜 Scripts Disponibles
+## Scripts Disponibles
 
 ```bash
 # Desarrollo
@@ -197,17 +195,17 @@ pnpm db:seed          # Siembra datos iniciales
 pnpm clean            # Limpia carpeta dist/
 ```
 
-## 🗄️ Base de Datos
+## Base de Datos
 
 ### Estructura Modular
 
 El proyecto utiliza múltiples archivos de schema Prisma para mejor organización:
 
-#### 🔐 **auth.prisma** - Autenticación
+#### **auth.prisma** - Autenticación
 
 - `User` - Usuarios del sistema con roles y verificación
 
-#### 👥 **hr.prisma** - Recursos Humanos
+#### **hr.prisma** - Recursos Humanos
 
 - `Employee` - Información de empleados
 - `Schedule` - Horarios de trabajo
@@ -218,7 +216,7 @@ El proyecto utiliza múltiples archivos de schema Prisma para mejor organizació
 - `PerformanceWarning` - Advertencias de desempeño
 - `ShiftSwap` - Intercambios de turnos
 
-#### 📦 **inventory.prisma** - Inventario
+#### **inventory.prisma** - Inventario
 
 - `Warehouse` - Almacenes
 - `Product` - Productos
@@ -226,7 +224,7 @@ El proyecto utiliza múltiples archivos de schema Prisma para mejor organizació
 - `Transfer` - Transferencias entre almacenes
 - `TransferItem` - Ítems de transferencia
 
-#### 💰 **sales.prisma** - Ventas
+#### **sales.prisma** - Ventas
 
 - `Sale` - Ventas realizadas
 - `SaleItem` - Productos vendidos
@@ -256,7 +254,7 @@ El seed crea un usuario administrador por defecto:
 - **Role:** Admin
 - **Status:** Activo y Verificado
 
-## 🐳 Docker
+## Docker
 
 ### Desarrollo Local
 
@@ -276,12 +274,12 @@ docker compose down
 
 ### Características del Dockerfile
 
-- ✅ **Multi-stage build** para optimizar tamaño
-- ✅ **Instalación de dependencias** con frozen lockfile
-- ✅ **Generación automática** de Prisma Client
-- ✅ **Volumen persistente** para base de datos SQLite
-- ✅ **Migraciones automáticas** al iniciar
-- ✅ **Política de restart** para alta disponibilidad
+- **Multi-stage build** para optimizar tamaño
+- **Instalación de dependencias** con frozen lockfile
+- **Generación automática** de Prisma Client
+- **Volumen persistente** para base de datos SQLite
+- **Migraciones automáticas** al iniciar
+- **Política de restart** para alta disponibilidad
 
 ### Volúmenes
 
@@ -312,52 +310,133 @@ sudo cp dev.db data/dev.db
 sudo chown $(whoami):$(whoami) data/dev.db
 ```
 
-## 🎯 Funcionalidades
+## Funcionalidades
 
 ### Administradores
 
-- ✅ Registro y gestión de usuarios
-- ✅ Registro y gestión de empleados
-- ✅ Modificación de permisos
-- ✅ Actualización de datos personales
-- ✅ Registro de días libres
-- ✅ Gestión de nóminas
-- ✅ Control de inventario
-- ✅ Aprobación de intercambios de turnos
+- Registro y gestión de usuarios
+- Registro y gestión de empleados
+- Modificación de permisos
+- Actualización de datos personales
+- Registro de días libres
+- Gestión de nóminas
+- Control de inventario
+- Aprobación de intercambios de turnos
 
 ### Empleados (Usuarios)
 
-- ✅ Acceso a perfil personal
-- ✅ Consulta de días libres disponibles
-- ✅ Consulta de horas extra
-- ✅ Visualización de horarios
-- ✅ Descarga de recibos de nómina
-- ✅ Solicitud de intercambio de turnos
-- ✅ Registro de ventas
+- Acceso a perfil personal
+- Consulta de días libres disponibles
+- Consulta de horas extra
+- Visualización de horarios
+- Descarga de recibos de nómina
+- Solicitud de intercambio de turnos
+- Registro de ventas
 
-## 🔗 API Endpoints
+## API Endpoints
 
-### Autenticación & CSRF
+> **Base URL:** `http://localhost:3000`
+> **Auth:** Cookie `httpOnly` (`token`) generada al hacer login.
+> **CSRF:** Los métodos `POST`, `PUT`, `DELETE` y `PATCH` requieren el header `X-CSRF-Token`.
 
-```http
-GET    /api/auth/csrf-token   # Obtener token CSRF para formularios
-POST   /api/auth/login        # Inicio de sesión (devuelve info + setea cookie HttpOnly)
-POST   /api/auth/register     # (Admin) Registro de nuevo empleado con foto
-POST   /api/auth/verify       # Verificar email
-POST   /api/auth/refresh      # Renovar token
+### Flujo obligatorio para el frontend
+
+1. Al montar la app, llamar `GET /api/v1/security/csrf-token` para obtener el token CSRF.
+2. Incluir ese token en el header `X-CSRF-Token` en todas las mutaciones.
+3. Todas las peticiones deben enviarse con `credentials: 'include'` para que la cookie funcione.
+
+---
+
+### Security — `/api/v1/security`
+
+| Método | Ruta                          | Descripción        | Auth    |
+| ------ | ----------------------------- | ------------------ | ------- |
+| `GET`  | `/api/v1/security/csrf-token` | Obtener token CSRF | Pública |
+
+---
+
+### Auth — `/api/v1/auth`
+
+| Método | Ruta                               | Descripción                     | Auth       |
+| ------ | ---------------------------------- | ------------------------------- | ---------- |
+| `POST` | `/api/v1/auth/login`               | Inicio de sesión                | Pública    |
+| `GET`  | `/api/v1/auth/verify-email?token=` | Verificar email vía link        | Pública    |
+| `POST` | `/api/v1/auth/resend-verification` | Reenviar correo de verificación | Pública    |
+| `POST` | `/api/v1/auth/logout`              | Cerrar sesión                   | JWT cookie |
+
+**Body `POST /login`:**
+
+```json
+{ "email": "admin@mail.com", "password": "password" }
 ```
 
-_Nota:_ `register` espera multipart/form-data para procesar `profileImage`.
+Respuesta: setea cookie `token` + `{ "msg": "Login exitoso" }`.
 
-_Más endpoints en desarrollo (HR, Inventario y Ventas configuralos en `src/router/`)..._
+**Body `POST /resend-verification`:**
 
-## 🗺️ Roadmap y Tareas Pendientes
+```json
+{ "email": "user@mail.com" }
+```
 
-El desarrollo sigue un plan estructurado. Para ver los próximos pasos, especialmente relacionados con la implementación de **JWT** y seguridad, consulta:
+---
 
-👉 [TODO.md](./TODO.md)
+### Profile — `/api/v1/profile`
 
-## 💻 Desarrollo
+| Método | Ruta              | Descripción                         | Auth       |
+| ------ | ----------------- | ----------------------------------- | ---------- |
+| `GET`  | `/api/v1/profile` | Obtener perfil del usuario logueado | JWT cookie |
+
+---
+
+### Employees — `/api/v1/employees`
+
+> Todos los endpoints de este módulo requieren **JWT + rol ADMIN**.
+
+| Método | Ruta                    | Descripción                          | Auth        |
+| ------ | ----------------------- | ------------------------------------ | ----------- |
+| `GET`  | `/api/v1/employees`     | Listar todos los empleados           | JWT + ADMIN |
+| `POST` | `/api/v1/employees`     | Crear empleado (multipart/form-data) | JWT + ADMIN |
+| `GET`  | `/api/v1/employees/:id` | Obtener empleado por ID              | JWT + ADMIN |
+| `PUT`  | `/api/v1/employees/:id` | Actualizar datos de empleado         | JWT + ADMIN |
+
+**Campos `POST /employees` (`multipart/form-data`):**
+
+| Campo          | Tipo   | Requerido     |
+| -------------- | ------ | ------------- |
+| `role`         | string | Sí            |
+| `name`         | string | Sí            |
+| `lastname`     | string | Sí            |
+| `email`        | email  | Sí            |
+| `birthdate`    | date   | Sí            |
+| `rfc`          | string | Sí            |
+| `nss`          | string | Sí            |
+| `phone`        | string | Sí            |
+| `address`      | string | Sí            |
+| `salary`       | number | Sí            |
+| `profileImage` | file   | No (opcional) |
+
+Al crear un empleado se genera un password temporal y se envía un correo de verificación automáticamente. La imagen se sube a **Cloudinary**.
+
+---
+
+### Estado de módulos
+
+| Módulo     | Endpoints listos | Pendientes                  |
+| ---------- | ---------------- | --------------------------- |
+| Security   | 1                | —                           |
+| Auth       | 4                | —                           |
+| Profile    | 1                | Editar perfil propio        |
+| Employees  | 4                | DELETE, filtros, paginación |
+| Inventario | 0                | No iniciado                 |
+| Ventas     | 0                | No iniciado                 |
+
+## Roadmap y Tareas Pendientes
+
+El desarrollo sigue un plan estructurado. Para ver los próximos pasos consulta:
+
+[TODO.md](./TODO.md)
+
+## Desarrollo
 
 ### Convenciones de Código
 
@@ -388,17 +467,17 @@ El proyecto usa `ts-node` con nodemon para hot reload:
 }
 ```
 
-## 📝 Notas Importantes
+## Notas Importantes
 
-- ⚠️ El script de seed está bloqueado en producción
-- ⚠️ Cambia `JWT_SECRET_KEY` en producción
-- ⚠️ SQLite es ideal para desarrollo; considera PostgreSQL/MySQL para producción
-- ⚠️ Los logs de queries solo aparecen en desarrollo
+- El script de seed está bloqueado en producción (`NODE_ENV === 'production'`)
+- Cambia `JWT_SECRET_KEY` en producción — el `.env` actual tiene un valor débil
+- SQLite es ideal para desarrollo; considera PostgreSQL/MySQL para producción
+- Los logs de queries solo aparecen en desarrollo (configurado en `prisma/src/index.ts`)
 
-## 📄 Licencia
+## Licencia
 
 MIT License - Ver archivo LICENSE para más detalles
 
 ---
 
-**Desarrollado con ❤️ por el equipo de Store System**
+Desarrollado por el equipo de Store System
