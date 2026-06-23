@@ -45,3 +45,18 @@ export const uploadImageToCloudinary = (
         uploadStream.end(fileBuffer);
     });
 };
+
+export const deleteImageFromCloudinary = (publicId: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.destroy(publicId, (error, result) => {
+            if (error) return reject(error);
+            resolve();
+        });
+    });
+};
+
+export const extractCloudinaryPublicId = (url: string): string => {
+    const [, afterUpload] = url.split("/upload/");
+    const withoutVersion = afterUpload.replace(/^v\d+\//, "");
+    return withoutVersion.replace(/\.[^/.]+s/, "");
+};

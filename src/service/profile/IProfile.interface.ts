@@ -11,6 +11,11 @@ interface IProfileResponse extends IAuthResponse {
 
 interface IProfileService {
     getProfile(userId: string): Promise<Result<IProfileResponse, Error>>;
+
+    updateProfilePhoto(
+        userId: string,
+        imageBuffer: Buffer
+    ): Promise<Result<void, Error>>;
 }
 
 export { IProfileResponse, IProfileService };

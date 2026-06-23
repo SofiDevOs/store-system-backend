@@ -9,4 +9,5 @@ const profileController = new ProfileController(profileService);
 
 profileRouter.get("/", authenticate, profileController.getProfile);
 
+// profileRouter.put("/:id",authenticate, updateProfilePhoto)
 export default profileRouter;
