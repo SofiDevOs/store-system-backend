@@ -6,6 +6,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "nodemon",
+        "infisical:pull": "infisical export --format=dotenv > .env",
         "build": "tsc",
         "start": "node dist/src/app.js",
         "prepare": "node ./scripts/install-husky.js",
