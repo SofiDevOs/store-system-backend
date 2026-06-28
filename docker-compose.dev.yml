@@ -3,6 +3,7 @@ services:
         build:
             context: .
             target: dependencies
+            network: host
         container_name: backend
         image: store-system-backend:dev
         deploy:
