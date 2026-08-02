@@ -13,9 +13,10 @@ describe("Register Employee", () => {
     const app = server["app"];
     let csrfToken: string;
     let cookie: string;
+    let admin: any;
 
     beforeAll(async () => {
-        const admin = await createOrUpdateAdmin();
+        admin = await createOrUpdateAdmin();
         const auth = await getAuthCookie(app, admin);
 
         csrfToken = auth.csrfToken;
@@ -38,7 +39,25 @@ describe("Register Employee", () => {
                 address: "123 main st",
                 salary: 15000,
                 phone: "555-1234",
-            })
+            });
         expect(res.status).toBe(201);
+    });
+
+    it("should update employee and user fields without Prisma validation errors", async () => {
+        const employeeId = admin.employee?.id ?? admin.id;
+
+        const res = await request(app)
+            .put(`/api/v1/employees/${employeeId}`)
+            .set("x-csrf-token", csrfToken)
+            .set("Cookie", cookie)
+            .send({
+                name: "Juanito",
+                lastname: "Perez",
+                email: "updated-admin@example.com",
+                isActive: true,
+            });
+
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ msg: "Employee updated successfully" });
     });
 });

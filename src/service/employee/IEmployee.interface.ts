@@ -4,19 +4,21 @@ import { Result } from "../../shared/core/Result";
 
 interface IEmployeeInfo {
     email: string;
-    password: string;
-    token: string;
-    tokenExpires: Date;
-    role: string;
+    password?: string;
+    token?: string;
+    tokenExpires?: Date | null;
+    role?: string;
+    isActive?: boolean;
+    isVerified?: boolean;
 
-    name: string;
-    lastname: string;
-    birthdate: string;
-    rfc: string;
-    nss: string;
-    address: string;
-    phone: string;
-    salary: number;
+    name?: string;
+    lastname?: string;
+    birthdate?: string | Date;
+    rfc?: string;
+    nss?: string;
+    address?: string;
+    phone?: string;
+    salary?: number;
     position?: string;
     department?: string;
     profileImage?: string;

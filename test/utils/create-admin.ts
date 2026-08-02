@@ -25,5 +25,8 @@ export async function createOrUpdateAdmin() {
                 },
             },
         },
+        include: {
+            employee: true,
+        },
     });
 }

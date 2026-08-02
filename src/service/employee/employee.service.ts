@@ -15,6 +15,15 @@ import type { EmployeeDetailDTO } from "../../model/dtos/employeeDetail.dto";
  *
  * @see {@link https://fsharpforfunandprofit.com/rop/ Railway Oriented Programming}
  */
+const toDateOrUndefined = (value: unknown): Date | undefined => {
+    if (value === undefined || value === null) return undefined;
+    if (value instanceof Date) return value;
+    if (typeof value === "string" || typeof value === "number") {
+        return new Date(value);
+    }
+    return undefined;
+};
+
 export class EmployeeService implements IEmployeeService {
     /**
      * Creates a new employee by atomically inserting both a `User` (auth record)
@@ -72,7 +81,8 @@ export class EmployeeService implements IEmployeeService {
                     data: {
                         name: payload.name,
                         lastname: payload.lastname,
-                        birthdate: new Date(payload.birthdate),
+                        birthdate:
+                            toDateOrUndefined(payload.birthdate) ?? new Date(),
                         nss: payload.nss,
                         rfc: payload.rfc,
                         address: payload.address,
@@ -190,12 +200,76 @@ export class EmployeeService implements IEmployeeService {
         employeeId: string,
         updateData: Partial<IEmployeeInfo>
     ): Promise<Result<void, Error>> {
-        console.log(updateData);
         try {
-            await prisma.employee.update({
-                where: { id: employeeId },
-                data: { ...updateData },
+            const employeeAllowedFields = [
+                "name",
+                "lastname",
+                "birthdate",
+                "nss",
+                "rfc",
+                "address",
+                "phone",
+                "salary",
+                "position",
+                "department",
+                "profileImage",
+            ] as const;
+
+            const userAllowedFields = [
+                "email",
+                "password",
+                "token",
+                "tokenExpires",
+                "role",
+                "isActive",
+                "isVerified",
+            ] as const;
+
+            const employeeUpdateData: Record<string, unknown> = {};
+            const userUpdateData: Record<string, unknown> = {};
+
+            for (const key of employeeAllowedFields) {
+                const value = updateData[key as keyof IEmployeeInfo];
+                if (value !== undefined) {
+                    employeeUpdateData[key] =
+                        key === "birthdate"
+                            ? (toDateOrUndefined(value) ?? null)
+                            : value;
+                }
+            }
+
+            for (const key of userAllowedFields) {
+                const value = updateData[key as keyof IEmployeeInfo];
+                if (value !== undefined) {
+                    userUpdateData[key] = value;
+                }
+            }
+
+            await prisma.$transaction(async (tx: any) => {
+                const employee = await tx.employee.findUnique({
+                    where: { id: employeeId },
+                    select: { userId: true },
+                });
+
+                if (!employee) {
+                    throw new EmployeeNotFoundError(employeeId);
+                }
+
+                if (Object.keys(employeeUpdateData).length > 0) {
+                    await tx.employee.update({
+                        where: { id: employeeId },
+                        data: employeeUpdateData,
+                    });
+                }
+
+                if (Object.keys(userUpdateData).length > 0) {
+                    await tx.user.update({
+                        where: { id: employee.userId },
+                        data: userUpdateData,
+                    });
+                }
             });
+
             return Result.ok<void, Error>(undefined);
         } catch (error) {
             return Result.fail(error as Error);
